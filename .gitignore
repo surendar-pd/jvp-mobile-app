@@ -8,6 +8,7 @@ node_modules/
 dist/
 web-build/
 expo-env.d.ts
+eas-build-*/
 
 # Native
 *.orig.*
@@ -31,8 +32,41 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env
 
 # typescript
 *.tsbuildinfo
 
 app-example
+
+# IDE/Editor
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+
+# Build artifacts
+ios/build/
+android/build/
+android/app/build/
+android/.gradle/
+.gradle/
+local.properties
+
+# iOS specific
+ios/Pods/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+
+# Testing
+coverage/
+.jest/
+
+# Cache files
+.eslintcache
+
+# Temporary files
+*.log
+.tmp/
