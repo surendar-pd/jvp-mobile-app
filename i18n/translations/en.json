@@ -1,0 +1,23 @@
+{
+	"signup": {
+		"title": "Sign Up",
+		"subtitle": "Enter your details to create an account",
+		"username": "Username",
+		"email": "Email",
+		"password": "Password",
+		"button": "Create Account",
+		"successMessage": "Account created successfully! Please check your email to verify your account.",
+		"errorMessage": "An error occurred while creating your account. Please try again.",
+		"terms": "By signing up, you agree to our Terms of Service and Privacy Policy.",
+		"termsLink": "Terms of Service",
+		"privacyLink": "Privacy Policy",
+		"alreadyHaveAccount": "Already have an account?",
+		"loginLink": "Login"
+	},
+	"login": {
+		"email": "Email",
+		"password": "Password",
+		"rememberMe": "Remember Me",
+		"forgotPassword": "Forgot Password?"
+	}
+}

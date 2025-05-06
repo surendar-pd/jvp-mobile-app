@@ -1,45 +1,93 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { Tabs, Redirect } from "expo-router";
+import React from "react";
+import { Image, Platform } from "react-native";
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+
+import { HapticTab } from "@/components/HapticTab";
+import { IconSymbol } from "@/components/ui/IconSymbol";
+import TabBarBackground from "@/components/ui/TabBarBackground";
+import { Colors } from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { useAuthStore } from "@/store";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+	const colorScheme = useColorScheme();
+	const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
-  );
+	// If user is not logged in, redirect to login
+	if (!isLoggedIn) {
+		return <Redirect href="/(auth)" />;
+	}
+
+	return (
+		<Tabs
+			screenOptions={{
+				tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+				headerShown: false,
+				tabBarButton: HapticTab,
+				tabBarBackground: TabBarBackground,
+				tabBarStyle: Platform.select({
+					ios: {
+						position: "absolute",
+					},
+				}),
+			}}
+		>
+			<Tabs.Screen
+				name="index"
+				options={{
+					title: "Home",
+					headerShown: true,
+					headerTitle: "JVP",
+					headerTitleStyle: {
+						fontFamily: "Poppins",
+					},
+					tabBarIcon: ({ color, focused }) => (
+						<IconSymbol size={24} name={focused ? "house.fill" : "house"}	 color={color} />
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name="explore"
+				redirect={false}
+				options={{
+					href: null,
+					title: "Explore",
+					tabBarIcon: ({ color, focused }) => (
+						<IconSymbol size={24} name={focused ? "paperplane.fill" : "paperplane"} color={color} />
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name="profile"
+				options={{
+					title: "Profile",
+					headerShown: true,
+					headerTitle: "Profile",
+					headerTitleStyle: {
+						fontFamily: "Poppins",
+					},
+					tabBarIcon: ({ color, focused }) => (
+						<Image 
+							source={{uri: "https://avatar.iran.liara.run/public/boy"}} 
+							className="w-8 h-8 rounded-full"
+						/>
+					),
+					tabBarIconStyle: {
+						flex: 1,
+						alignItems: 'center',
+						justifyContent: 'center'
+					}
+				}}
+			/>
+			<Tabs.Screen
+				name="upload"
+				options={{
+					title: "Upload",
+					animation: "fade",
+					href: null,
+				}}
+			/>
+		</Tabs>
+	);
 }
