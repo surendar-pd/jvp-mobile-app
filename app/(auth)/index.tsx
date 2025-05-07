@@ -2,10 +2,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import type { FieldErrors, Control } from "react-hook-form";
 import { useForm, Controller } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { useTranslation } from "react-i18next";
 import AuthHeader from "@/components/auth/auth-header";
 import { ThemedView } from "@/components/ThemedView";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Text } from "@/components/ui/text";
 import { useLogin } from "@/hooks/useAuth";
-import type { LoginFormData} from "@/schemas/auth";
+import type { LoginFormData } from "@/schemas/auth";
 import { loginSchema } from "@/schemas/auth";
 
 type FormFieldProps = {
@@ -79,29 +79,29 @@ export default function Login() {
 	return (
 		<ThemedView>
 			<SafeAreaView edges={["top"]} />
-			<ScrollView className="flex-1" contentContainerStyle={{ padding: 20 }}>
+			<ScrollView className="flex-1 p-4">
 				<AuthHeader
-					heading={t("login")}
-					subHeading={t("Enter your credentials to login")}
+					heading={t("login.title")}
+					subHeading={t("login.subtitle")}
 				/>
 				<View className="gap-y-4">
 					<View>
-						<Label htmlFor="email">{t("Email")}</Label>
+						<Label htmlFor="email">{t("login.email")}</Label>
 						<FormField
 							control={control}
 							name="email"
-							placeholder={t("Email")}
+							placeholder={t("login.email")}
 							autoCapitalize="none"
 							keyboardType="email-address"
 							errors={errors}
 						/>
 					</View>
 					<View>
-						<Label htmlFor="password">{t("Password")}</Label>
+						<Label htmlFor="password">{t("login.password")}</Label>
 						<FormField
 							control={control}
 							name="password"
-							placeholder={t("Password")}
+							placeholder={t("login.password")}
 							secureTextEntry
 							errors={errors}
 						/>

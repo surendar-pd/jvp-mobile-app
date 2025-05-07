@@ -10,7 +10,7 @@ interface AuthState {
 }
 
 interface LanguageState {
-	currentLanguage: string;
+	currentLanguage: "en" | "fr";
 	toggleLanguage: (code: "en" | "fr") => void;
 }
 
@@ -44,7 +44,7 @@ export const useAuthStore = create<AuthState>()(
 export const useLanguageStore = create<LanguageState>()(
 	persist(
 		(set) => ({
-			currentLanguage: "en",
+			currentLanguage: "fr",
 			toggleLanguage: (code) => {
 				set(() => {
 					const newLang = code;

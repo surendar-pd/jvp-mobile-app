@@ -16,5 +16,5 @@
 		".expo/types/**/*.ts",
 		"expo-env.d.ts",
 		"nativewind-env.d.ts"
-, "eslint.config.js", "metro.config.cjs"	]
+, "eslint.config.js", "metro.config.cjs", "babel.config.cjs"	]
 }

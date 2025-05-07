@@ -1,4 +1,7 @@
+// @ts-nocheck
+/* eslint-disable @typescript-eslint/no-require-imports */
 const { hairlineWidth } = require("nativewind/theme");
+const typography = require("@tailwindcss/typography");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -47,5 +50,5 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [],
+	plugins: [typography],
 };

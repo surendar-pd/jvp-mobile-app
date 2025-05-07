@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Label } from "@/components/ui/label";
 import { router } from "expo-router";
 import { useForm, Controller, Control, FieldErrors } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
+import { Label } from "@/components/ui/label";
 
 import AuthHeader from "@/components/auth/auth-header";
 import { ThemedView } from "@/components/ThemedView";
@@ -16,6 +16,7 @@ import { Text } from "@/components/ui/text";
 import { useSignup } from "@/hooks/useAuth";
 import { signupSchema, type SignupFormData } from "@/schemas/auth";
 import { useLanguageStore } from "@/store";
+
 type FormFieldProps = {
 	control: Control<SignupFormData>;
 	name: keyof SignupFormData;
@@ -60,6 +61,7 @@ const FormField = ({
 
 export default function Signup() {
 	const { t } = useTranslation();
+
 	const { toggleLanguage, currentLanguage } = useLanguageStore();
 	const { mutate: signup, isPending } = useSignup();
 
@@ -86,7 +88,7 @@ export default function Signup() {
 			<SafeAreaView edges={["top"]} />
 			<ScrollView className="flex-1 p-4">
 				<AuthHeader
-					heading={t("signup")}
+					heading={t("signup.title")}
 					subHeading={t("Enter the following details to create an account")}
 				/>
 				<View className="gap-y-4">
@@ -139,7 +141,7 @@ export default function Signup() {
 						</RadioGroup>
 					</View>
 					<Button
-						variant={"default"}
+						variant="default"
 						onPress={handleSubmit(onSubmit)}
 						disabled={isPending}
 					>
@@ -165,7 +167,7 @@ function RadioGroupItemWithLabel({
 	onLabelPress: () => void;
 }) {
 	return (
-		<View className={"flex-row gap-2  items-center"}>
+		<View className="flex-row gap-2  items-center">
 			<RadioGroupItem aria-labelledby={`label-for-${value}`} value={value} />
 			<Label
 				className="mb-0"

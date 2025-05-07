@@ -1,6 +1,5 @@
 import React from "react";
-import { Text } from "react-native";
-
+import { Link } from "expo-router";
 import { Collapsible } from "@/components/Collapsible";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedView } from "@/components/ThemedView";
@@ -13,6 +12,8 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { IconSymbol } from "@/components/ui/IconSymbol";
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
 
 const HomeScreen = () => {
 	return (
@@ -27,6 +28,11 @@ const HomeScreen = () => {
 			}
 		>
 			<ThemedView className="p-6">
+				<Link asChild href="/welcome-consent">
+					<Button>
+						<Text>welcome</Text>
+					</Button>
+				</Link>
 				<Card>
 					<CardHeader>
 						<CardTitle>Upload Video</CardTitle>

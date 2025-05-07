@@ -1,26 +1,22 @@
 import * as SecureStore from "expo-secure-store";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import auxilaryEn from "@/constants/auxilary-pages/en";
+import auxilaryFr from "@/constants/auxilary-pages/fr";
+import en from "./translations/en.json";
+import fr from "./translations/fr.json";
 
 const resources = {
 	en: {
 		translation: {
-			welcome: "Welcome to the App",
-			login: "Login",
-			signup: "Sign Up",
-			dontHaveAccount: "Don't have an account?",
-			alreadyHaveAccount: "Already have an account?",
-			toggleLanguage: "Toggle Language",
+			...en,
+			...auxilaryEn,
 		},
 	},
 	fr: {
 		translation: {
-			welcome: "Bienvenue dans l'application",
-			login: "Connexion",
-			signup: "S'inscrire",
-			dontHaveAccount: "Vous n'avez pas de compte ?",
-			alreadyHaveAccount: "Vous avez déjà un compte ?",
-			toggleLanguage: "Changer de langue",
+			...fr,
+			...auxilaryFr,
 		},
 	},
 };

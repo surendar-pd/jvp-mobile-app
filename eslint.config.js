@@ -105,8 +105,6 @@ export default tseslint.config(
 						"sibling",
 						"index",
 					],
-					"newlines-between": "always",
-					alphabetize: { order: "asc", caseInsensitive: true },
 				},
 			],
 

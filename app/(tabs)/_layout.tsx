@@ -1,7 +1,6 @@
 import { Tabs, Redirect } from "expo-router";
 import React from "react";
-import { Image, Platform } from "react-native";
-
+import { Platform } from "react-native";
 
 import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
@@ -43,7 +42,11 @@ export default function TabLayout() {
 						fontFamily: "Poppins",
 					},
 					tabBarIcon: ({ color, focused }) => (
-						<IconSymbol size={24} name={focused ? "house.fill" : "house"}	 color={color} />
+						<IconSymbol
+							size={24}
+							name={focused ? "house.fill" : "house"}
+							color={color}
+						/>
 					),
 				}}
 			/>
@@ -54,7 +57,11 @@ export default function TabLayout() {
 					href: null,
 					title: "Explore",
 					tabBarIcon: ({ color, focused }) => (
-						<IconSymbol size={24} name={focused ? "paperplane.fill" : "paperplane"} color={color} />
+						<IconSymbol
+							size={24}
+							name={focused ? "paperplane.fill" : "paperplane"}
+							color={color}
+						/>
 					),
 				}}
 			/>
@@ -64,20 +71,23 @@ export default function TabLayout() {
 					title: "Profile",
 					headerShown: true,
 					headerTitle: "Profile",
+
+					headerBackButtonDisplayMode: "minimal",
 					headerTitleStyle: {
 						fontFamily: "Poppins",
 					},
 					tabBarIcon: ({ color, focused }) => (
-						<Image 
-							source={{uri: "https://avatar.iran.liara.run/public/boy"}} 
-							className="w-8 h-8 rounded-full"
+						<IconSymbol
+							size={24}
+							name={focused ? "person.fill" : "person"}
+							color={color}
 						/>
 					),
 					tabBarIconStyle: {
 						flex: 1,
-						alignItems: 'center',
-						justifyContent: 'center'
-					}
+						alignItems: "center",
+						justifyContent: "center",
+					},
 				}}
 			/>
 			<Tabs.Screen

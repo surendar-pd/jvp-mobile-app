@@ -1,0 +1,6 @@
+{
+	"typescript.tsdk": "node_modules\\typescript\\lib",
+	"i18n-ally.localesPaths": ["./i18n/translations"],
+	"i18n-ally.sourceLanguage": "english",
+	"i18n-ally.keystyle": "nested"
+}

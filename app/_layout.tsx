@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import "../global.css";
 import "../i18n";
 
@@ -9,22 +10,17 @@ import {
 import { PortalHost } from "@rn-primitives/portal";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
-import { useRouter, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useMemo } from "react";
 import "react-native-reanimated";
 import { ErrorBoundary } from "react-error-boundary";
-import { useTranslation } from "react-i18next";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner-native";
-
 import { useColorScheme } from "@/lib/useColorScheme";
-import { useAuthStore } from "@/store";
-
-
-import { AuthProvider } from '../context/AuthContext';
+import { AuthProvider } from "../context/AuthContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -42,9 +38,9 @@ const queryClient = new QueryClient({
 
 // Error fallback component
 const ErrorFallback = ({ error }: { error: Error }) => (
-	<View style={styles.errorContainer}>
-		<Text style={styles.errorText}>Something went wrong:</Text>
-		<Text style={styles.errorMessage}>{error.message}</Text>
+	<View className="flex-1 justify-center items-center p-4">
+		<Text>Something went wrong:</Text>
+		<Text>{error.message}</Text>
 	</View>
 );
 
@@ -63,17 +59,13 @@ const fontConfig = {
 
 export default function RootLayout() {
 	const { isDarkColorScheme } = useColorScheme();
-	const router = useRouter();
-	const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 	const [loaded, error] = useFonts(fontConfig);
-	const { t } = useTranslation();
 
 	// Memoize theme to prevent unnecessary re-renders
 	const theme = useMemo(
 		() => (isDarkColorScheme ? DarkTheme : DefaultTheme),
 		[isDarkColorScheme]
 	);
-
 
 	useEffect(() => {
 		if (loaded) {
@@ -84,8 +76,8 @@ export default function RootLayout() {
 	// Handle font loading errors
 	if (error) {
 		return (
-			<View style={styles.errorContainer}>
-				<Text style={styles.errorText}>Failed to load fonts</Text>
+			<View className="flex-1 justify-center items-center p-4">
+				<Text className="">Failed to load fonts</Text>
 			</View>
 		);
 	}
@@ -99,13 +91,16 @@ export default function RootLayout() {
 			<ErrorBoundary FallbackComponent={ErrorFallback}>
 				<ThemeProvider value={theme}>
 					<QueryClientProvider client={queryClient}>
-						<GestureHandlerRootView style={{ flex: 1 }}>
+						<GestureHandlerRootView className="flex-1">
 							<Stack
+								initialRouteName="welcome-consent"
 								screenOptions={{
 									headerShown: false,
 								}}
 							>
-								<Stack.Screen name="(auth)" options={{ title: t("auth") }} />
+								<Stack.Screen name="welcome-consent" />
+								<Stack.Screen name="(aux)" />
+								<Stack.Screen name="(auth)" />
 								<Stack.Screen name="(tabs)" />
 								<Stack.Screen name="+not-found" />
 							</Stack>
@@ -119,22 +114,3 @@ export default function RootLayout() {
 		</AuthProvider>
 	);
 }
-
-const styles = StyleSheet.create({
-	errorContainer: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-		padding: 20,
-	},
-	errorText: {
-		fontSize: 18,
-		fontWeight: "bold",
-		marginBottom: 10,
-	},
-	errorMessage: {
-		fontSize: 14,
-		color: "red",
-		textAlign: "center",
-	},
-});
