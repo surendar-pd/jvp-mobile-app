@@ -1,28 +1,43 @@
 {
+	"welcome": {
+		"title": "Bienvenue à Notre",
+		"title2": "Application",
+		"subtitle": "Votre solution tout-en-un pour tous vos besoins"
+	},
 	"privacyPolicyPage": {
-		"title": "Politique De Confidentialité"
+		"title": "Politique de Confidentialité"
 	},
 	"signup": {
-		"title": "Sign Up",
-		"subtitle": "Enter your details to create an account",
-		"username": "Username",
-		"email": "Email",
-		"password": "Password",
-		"button": "Create Account",
-		"successMessage": "Account created successfully! Please check your email to verify your account.",
-		"errorMessage": "An error occurred while creating your account. Please try again.",
-		"terms": "By signing up, you agree to our Terms of Service and Privacy Policy.",
-		"termsLink": "Terms of Service",
-		"privacyLink": "Privacy Policy",
-		"alreadyHaveAccount": "Already have an account?",
-		"loginLink": "Login"
+		"title": "S'inscrire",
+		"subtitle": "Entrez vos coordonnées pour créer un compte",
+		"username": "Nom d'utilisateur",
+		"email": "E-mail",
+		"password": "Mot de passe",
+		"preferredLanguage": "Langue préférée",
+		"alreadyHaveAccount": "Vous avez déjà un compte?",
+		"loginLink": "Connexion",
+		"consent1": "En vous connectant, vous acceptez nos",
+		"termsLink": "Conditions d'utilisation",
+		"consent2": "et que vous avez lu notre",
+		"privacyLink": "Politique de Confidentialité"
 	},
 	"login": {
-		"title": "Login",
-		"subtitle": "Enter your credentials to access your account",
-		"email": "Email",
-		"password": "Password",
-		"rememberMe": "Remember Me",
-		"forgotPassword": "Forgot Password?"
+		"title": "Connexion",
+		"subtitle": "Entrez vos identifiants pour accéder à votre compte",
+		"email": "E-mail",
+		"password": "Mot de passe",
+		"dontHaveAccount": "Vous n'avez pas de compte?",
+		"signupLink": "S'inscrire"
+	},
+	"button": {
+		"getStarted": "Commencer",
+		"signup": "S'inscrire",
+		"login": "Connexion",
+		"submit": "Soumettre",
+		"cancel": "Annuler",
+		"delete": "Supprimer",
+		"edit": "Modifier",
+		"save": "Enregistrer",
+		"update": "Mettre à jour"
 	}
 }

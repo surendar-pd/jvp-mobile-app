@@ -1,4 +1,9 @@
 {
+	"welcome": {
+		"title": "Welcome to Our",
+		"title2": "Application",
+		"subtitle": "Your one-stop solution for all your needs"
+	},
 	"privacyPolicyPage": {
 		"title": "Privacy Policy"
 	},
@@ -8,21 +13,31 @@
 		"username": "Username",
 		"email": "Email",
 		"password": "Password",
-		"button": "Create Account",
-		"successMessage": "Account created successfully! Please check your email to verify your account.",
-		"errorMessage": "An error occurred while creating your account. Please try again.",
-		"terms": "By signing up, you agree to our Terms of Service and Privacy Policy.",
-		"termsLink": "Terms of Service",
-		"privacyLink": "Privacy Policy",
+		"preferredLanguage": "Preferred Language",
 		"alreadyHaveAccount": "Already have an account?",
-		"loginLink": "Login"
+		"loginLink": "Login",
+		"consent1": "By logging in, you agree to our",
+		"termsLink": "Terms of Service",
+		"consent2": "and that you have read our",
+		"privacyLink": "Privacy Policy"
 	},
 	"login": {
 		"title": "Login",
 		"subtitle": "Enter your credentials to access your account",
 		"email": "Email",
 		"password": "Password",
-		"rememberMe": "Remember Me",
-		"forgotPassword": "Forgot Password?"
+		"dontHaveAccount": "Don't have an account?",
+		"signupLink": "Sign Up"
+	},
+	"button": {
+		"getStarted": "Get Started",
+		"signup": "Sign Up",
+		"login": "Login",
+		"submit": "Submit",
+		"cancel": "Cancel",
+		"delete": "Delete",
+		"edit": "Edit",
+		"save": "Save",
+		"update": "Update"
 	}
 }

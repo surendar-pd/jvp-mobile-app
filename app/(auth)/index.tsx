@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import type { FieldErrors, Control } from "react-hook-form";
 import { useForm, Controller } from "react-hook-form";
-import { View, ScrollView } from "react-native";
+import { Image, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useTranslation } from "react-i18next";
@@ -78,13 +79,17 @@ export default function Login() {
 
 	return (
 		<ThemedView>
-			<SafeAreaView edges={["top"]} />
-			<ScrollView className="flex-1 p-4">
-				<AuthHeader
-					heading={t("login.title")}
-					subHeading={t("login.subtitle")}
+			<SafeAreaView edges={["bottom"]} className="flex-1">
+				<Image
+					source={require("@/assets/images/hero.png")}
+					alt="Welcome Consent"
+					className="w-full h-1/2 object-cover object-center"
 				/>
-				<View className="gap-y-4">
+				<View className="gap-y-4 px-4 pt-8">
+					<AuthHeader
+						heading={t("login.title")}
+						subHeading={t("login.subtitle")}
+					/>
 					<View>
 						<Label htmlFor="email">{t("login.email")}</Label>
 						<FormField
@@ -106,21 +111,24 @@ export default function Login() {
 							errors={errors}
 						/>
 					</View>
+					<View className="flex-row items-center justify-center gap-x-2">
+						<Text>{t("login.dontHaveAccount")}</Text>
+						<Text onPress={() => router.push("/signup")} className="underline">
+							{t("login.signupLink")}
+						</Text>
+					</View>
+				</View>
+				<View className="px-4 mt-auto">
 					<Button
+						size="lg"
 						variant="default"
 						onPress={handleSubmit(onSubmit)}
 						disabled={isPending}
 					>
-						<Text>{isPending ? t("loggingIn") : t("login")}</Text>
+						<Text>{t("button.login")}</Text>
 					</Button>
-					<View className="flex-row items-center justify-center gap-x-2">
-						<Text>{t("dontHaveAccount")}</Text>
-						<Text onPress={() => router.push("/signup")} className="underline">
-							{t("signup")}
-						</Text>
-					</View>
 				</View>
-			</ScrollView>
+			</SafeAreaView>
 		</ThemedView>
 	);
 }

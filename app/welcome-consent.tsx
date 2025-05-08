@@ -1,82 +1,62 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 import { Link } from "expo-router";
 import { Image, View } from "react-native";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
-import { H1 } from "@/components/ui/typography";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { H1, Large, Muted } from "@/components/ui/typography";
 
 export default function WelcomeConsentScreen() {
+	const { t } = useTranslation();
 	return (
-		<ParallaxScrollView
-			headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
-			headerImage={
-				<Image
-					source={require("@/assets/images/hero.png")}
-					alt="Welcome Consent"
-					className="w-full h-full object-cover object-center"
-				/>
-			}
-		>
-			<View className="flex-1 justify-between gap-4 px-4 pb-8">
-				<View className="ios:pt-8 pt-12">
-					<H1 className="text-left font-bold">Welcome to your</H1>
-					<H1 className="text-primary font-bold">Application</H1>
+		<SafeAreaView edges={["bottom"]} className="flex-1">
+			<Image
+				source={require("@/assets/images/hero.png")}
+				alt="Welcome Consent"
+				className="w-full h-1/2 object-cover object-center"
+			/>
+			<View className="px-4 py-8 gap-4">
+				<View className="">
+					<H1 className="text-left font-bold">{t("welcome.title")}</H1>
+					<H1 className="text-primary font-bold">{t("welcome.title2")}</H1>
 				</View>
-				<View className="gap-8">
-					{FEATURES.map((feature) => (
-						<View key={feature.title} className="flex-row gap-4">
-							<View className="pt-px">
-								{/* <Icon
-									name={feature.icon}
-									size={38}
-									// color={colors.primary}
-									ios={{ renderingMode: "hierarchical" }}
-								/> */}
-							</View>
-							<View className="flex-1">
-								<Text className="font-bold">{feature.title}</Text>
-								<Text>{feature.description}</Text>
+				<View className="gap-4">
+					{FEATURES.map((feature, idx) => (
+						<View key={`${feature.title}-${idx}`} className="">
+							<View className="">
+								<Large>{feature.title}</Large>
+								<Muted className="text-lg">{feature.description}</Muted>
 							</View>
 						</View>
 					))}
 				</View>
-				<Text className="pt-1 text-center">
-					By pressing continue, you agree to our{" "}
-					<Link href="/">
-						<Text className="text-primary">Terms of Service</Text>
-					</Link>{" "}
-					and that you have read our{" "}
-					<Link href="/(aux)">
-						<Text className="text-primary">Privacy Policy</Text>
-					</Link>
-				</Text>
-				<Link href="/(auth)" replace asChild>
+			</View>
+			<View className="mt-auto px-4">
+				<Link href="/(auth)" prefetch={false} asChild>
 					<Button size="lg">
-						<Text>Continue</Text>
+						<Text>{t("button.getStarted")}</Text>
 					</Button>
 				</Link>
 			</View>
-		</ParallaxScrollView>
+		</SafeAreaView>
 	);
 }
 
 const FEATURES = [
 	{
-		title: "Profile Management",
-		description:
-			"Easily update and manage your personal information, settings, and preferences",
+		title: "Lorem Ipsum",
+		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
 		icon: "account",
 	},
 	{
-		title: "Secure Messaging",
-		description: "Chat securely with friends and family in real-time.",
+		title: "Lorem Ipsum",
+		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
 		icon: "message-processing",
 	},
 	{
-		title: "Activity Tracking",
-		description:
-			"Monitor your daily activities and track your progress over time.",
+		title: "Lorem Ipsum",
+		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
 		icon: "chart-timeline-variant",
 	},
 ] as const;

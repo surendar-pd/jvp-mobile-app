@@ -30,7 +30,7 @@ const storage = createJSONStorage(() => ({
 export const useAuthStore = create<AuthState>()(
 	persist(
 		(set) => ({
-			isLoggedIn: true,
+			isLoggedIn: false,
 			setLoggedIn: (value: boolean) => set({ isLoggedIn: value }),
 		}),
 		{

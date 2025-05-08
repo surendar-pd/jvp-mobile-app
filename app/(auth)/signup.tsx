@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { useForm, Controller, Control, FieldErrors } from "react-hook-form";
-import { View, ScrollView } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { Label } from "@/components/ui/label";
@@ -85,46 +85,45 @@ export default function Signup() {
 
 	return (
 		<ThemedView>
-			<SafeAreaView edges={["top"]} />
-			<ScrollView className="flex-1 p-4">
+			<SafeAreaView edges={["top", "bottom"]} className="flex-1 px-4">
 				<AuthHeader
 					heading={t("signup.title")}
-					subHeading={t("Enter the following details to create an account")}
+					subHeading={t("signup.subtitle")}
 				/>
-				<View className="gap-y-4">
+				<View className="gap-y-4 flex-1">
 					<View>
-						<Label htmlFor="username">{t("Username")}</Label>
+						<Label htmlFor="username">{t("signup.username")}</Label>
 						<FormField
 							control={control}
 							name="username"
-							placeholder={t("Username")}
+							placeholder={t("signup.username")}
 							autoCapitalize="words"
 							errors={errors}
 						/>
 					</View>
 					<View>
-						<Label htmlFor="email">{t("Email")}</Label>
+						<Label htmlFor="email">{t("signup.email")}</Label>
 						<FormField
 							control={control}
 							name="email"
-							placeholder={t("Email")}
+							placeholder={t("signup.email")}
 							autoCapitalize="none"
 							keyboardType="email-address"
 							errors={errors}
 						/>
 					</View>
 					<View>
-						<Label htmlFor="password">{t("Password")}</Label>
+						<Label htmlFor="password">{t("signup.password")}</Label>
 						<FormField
 							control={control}
 							name="password"
-							placeholder={t("Password")}
+							placeholder={t("signup.password")}
 							secureTextEntry
 							errors={errors}
 						/>
 					</View>
 					<View className="">
-						<Label htmlFor="language">{t("Prefered Language")}</Label>
+						<Label htmlFor="language">{t("signup.preferredLanguage")}</Label>
 						<RadioGroup
 							value={currentLanguage}
 							onValueChange={(val) => toggleLanguage(val as "en" | "fr")}
@@ -140,21 +139,35 @@ export default function Signup() {
 							/>
 						</RadioGroup>
 					</View>
-					<Button
-						variant="default"
-						onPress={handleSubmit(onSubmit)}
-						disabled={isPending}
-					>
-						<Text>{isPending ? t("signingUp") : t("signup")}</Text>
-					</Button>
-					<View className="flex-row items-center justify-center gap-x-2">
-						<Text>{t("alreadyHaveAccount")}</Text>
-						<Text onPress={() => router.back()} className="underline">
-							{t("login")}
+					<View className="">
+						<Text className="text-center">
+							{t("signup.alreadyHaveAccount")}{" "}
+							<Text onPress={() => router.back()} className="underline">
+								{t("signup.loginLink")}
+							</Text>
 						</Text>
 					</View>
 				</View>
-			</ScrollView>
+				<Text className="mb-4 text-center">
+					{t("signup.consent1")}{" "}
+					<Link href="/">
+						<Text className="text-primary">{t("signup.termsLink")}</Text>
+					</Link>{" "}
+					{t("signup.consent2")}{" "}
+					<Link href="/(aux)">
+						<Text className="text-primary">{t("signup.privacyLink")}</Text>
+					</Link>
+				</Text>
+				<Button
+					size="lg"
+					className="mt-auto"
+					variant="default"
+					onPress={handleSubmit(onSubmit)}
+					disabled={isPending}
+				>
+					<Text>{t("button.signup")}</Text>
+				</Button>
+			</SafeAreaView>
 		</ThemedView>
 	);
 }
