@@ -5,22 +5,24 @@ import { Text } from "@/components/ui/text";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-interface HeightPickerPayload {
-	initialValue?: number;
-	onValueSelected?: (value: number, unit: string, cmValue: number) => void;
+interface HeightPickerImperialSheetProps {
+	payload?: {
+		initialValue?: number;
+		onValueSelected?: (
+			value: number,
+			unit: string,
+			convertedMetricValue: number
+		) => void;
+	};
 }
 
-interface HeightPickerProps {
-	payload?: HeightPickerPayload;
-}
-
-function HeightPickerImperialSheet(props: HeightPickerProps) {
+function HeightPickerImperialSheet(props: HeightPickerImperialSheetProps) {
 	const { payload } = props;
 	const { initialValue, onValueSelected } = payload || {};
+	const itemHeight = 50;
 
 	// Generate array of height values in feet and inches
-	type HeightValue = { feet: number; inches: number };
-	const values: HeightValue[] = [];
+	const values: { feet: number; inches: number }[] = [];
 	for (let feet = 4; feet <= 7; feet++) {
 		for (let inches = 0; inches < 12; inches++) {
 			values.push({ feet, inches });
@@ -35,29 +37,50 @@ function HeightPickerImperialSheet(props: HeightPickerProps) {
 		const totalInches = Math.round(initialValue / 2.54);
 
 		// Find closest matching feet/inches combination
-		return (
-			values.findIndex((v) => {
-				const valueInInches = v.feet * 12 + v.inches;
-				return valueInInches === totalInches;
-			}) || 20
-		); // Default to 5'8" if no match
+		const bestMatchIndex = values.findIndex((v) => {
+			const valueInInches = v.feet * 12 + v.inches;
+			return valueInInches === totalInches;
+		});
+
+		if (bestMatchIndex !== -1) return bestMatchIndex;
+
+		// If exact match not found, find closest
+		return values.reduce((closestIndex, value, index) => {
+			const currentInches = value.feet * 12 + value.inches;
+			const currentDiff = Math.abs(currentInches - totalInches);
+
+			const closestInches =
+				values[closestIndex].feet * 12 + values[closestIndex].inches;
+			const closestDiff = Math.abs(closestInches - totalInches);
+
+			return currentDiff < closestDiff ? index : closestIndex;
+		}, 0);
 	};
 
 	const [currentIndex, setCurrentIndex] = useState(findInitialIndex());
 	const scrollViewRef = useRef<ScrollView>(null);
-	const itemHeight = 50;
+
+	// Helper function to scroll to a specific index
+	const scrollToIndex = (index: number, animated: boolean = true) => {
+		if (scrollViewRef.current) {
+			scrollViewRef.current.scrollTo({
+				y: index * itemHeight,
+				animated,
+			});
+		}
+	};
 
 	useEffect(() => {
-		// Scroll to selected value when component mounts
-		if (scrollViewRef.current) {
-			setTimeout(() => {
-				scrollViewRef.current?.scrollTo({
-					y: currentIndex * itemHeight,
-					animated: false,
-				});
-			}, 100);
-		}
+		const timeoutId = setTimeout(() => {
+			scrollToIndex(currentIndex, false);
+		}, 100);
+
+		return () => clearTimeout(timeoutId);
 	}, []);
+
+	const handleValueChange = (index: number) => {
+		setCurrentIndex(index);
+	};
 
 	const handleConfirm = () => {
 		const selected = values[currentIndex];
@@ -65,12 +88,23 @@ function HeightPickerImperialSheet(props: HeightPickerProps) {
 			// Convert feet/inches to cm for storage
 			const totalInches = selected.feet * 12 + selected.inches;
 			const cmValue = totalInches * 2.54;
-			onValueSelected(totalInches, "in", cmValue);
+			onValueSelected(Math.round(totalInches), "in", Math.round(cmValue));
 		}
 	};
 
 	return (
-		<ActionSheet>
+		<ActionSheet
+			onBeforeShow={() => {
+				// Reset to the correct index when showing
+				const index = findInitialIndex();
+				setCurrentIndex(index);
+
+				// Use a timeout to ensure the scroll happens after render
+				setTimeout(() => {
+					scrollToIndex(index, false);
+				}, 50);
+			}}
+		>
 			<View className="p-4 border-b border-gray-200">
 				<Text className="text-lg font-semibold text-center">
 					Select Height (ft, in)
@@ -93,7 +127,11 @@ function HeightPickerImperialSheet(props: HeightPickerProps) {
 					onMomentumScrollEnd={(event) => {
 						const y = event.nativeEvent.contentOffset.y;
 						const index = Math.round(y / itemHeight);
-						setCurrentIndex(Math.min(Math.max(0, index), values.length - 1));
+						handleValueChange(Math.min(Math.max(0, index), values.length - 1));
+					}}
+					contentContainerStyle={{
+						paddingTop: 100, // Add top padding to align items with the highlight
+						paddingBottom: 100, // Add bottom padding for smooth scrolling
 					}}
 				>
 					{values.map((value, index) => (
@@ -105,10 +143,7 @@ function HeightPickerImperialSheet(props: HeightPickerProps) {
 							)}
 							onPress={() => {
 								setCurrentIndex(index);
-								scrollViewRef.current?.scrollTo({
-									y: index * itemHeight,
-									animated: true,
-								});
+								scrollToIndex(index);
 							}}
 						>
 							<Text className="text-lg font-medium">

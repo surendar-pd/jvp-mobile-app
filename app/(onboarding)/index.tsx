@@ -175,7 +175,7 @@ const OnboardingScreen = () => {
 					selectedValue &&
 					currentQuestion.followUpQuestions[selectedValue] &&
 					followUpQuestions[currentQuestion.id] && (
-						<View className="mt-6 pt-4 border-t border-gray-200">
+						<View className="mt-6 py-4 border-t border-gray-200">
 							<Label className="mb-2">
 								{currentQuestion.followUpQuestions[selectedValue].title}
 							</Label>
@@ -214,7 +214,7 @@ const OnboardingScreen = () => {
 
 				{/* Special handling for height_weight question using our new picker */}
 				{currentQuestion.id === "height_weight" && selectedValue && (
-					<View className="mt-4 space-y-4 border-t border-gray-200 pt-4">
+					<View className="mt-4 space-y-4 border-t border-gray-200 py-4">
 						{selectedValue === "metric" ? (
 							<>
 								<MeasurementInput
@@ -258,7 +258,7 @@ const OnboardingScreen = () => {
 					currentQuestion.inputFields &&
 					selectedValue &&
 					currentQuestion.inputFields[selectedValue] && (
-						<View className="mt-4 space-y-4 border-t border-gray-200 pt-4">
+						<View className="mt-4 gap-y-4 border-t border-gray-200 py-4">
 							{currentQuestion.inputFields[selectedValue].map((field) => (
 								<View key={field.id} className="space-y-2">
 									<Label>{field.title}</Label>
@@ -266,6 +266,7 @@ const OnboardingScreen = () => {
 										placeholder={
 											field.placeholder || `Enter ${field.title.toLowerCase()}`
 										}
+										returnKeyType="done"
 										keyboardType={field.keyboardType || "default"}
 										value={answers[field.id] || ""}
 										onChangeText={(value) => handleAnswer(field.id, value)}
@@ -288,7 +289,7 @@ const OnboardingScreen = () => {
 				>
 					{/* Progress bar */}
 					<View className="px-4 py-3 border-b border-gray-200 bg-blue-50">
-						<View className="w-full h-3 bg-gray-200 rounded-full">
+						<View className="w-full h-3 rounded-full">
 							<View
 								className="h-3 bg-primary rounded-full"
 								style={{ width: `${progress}%` }}

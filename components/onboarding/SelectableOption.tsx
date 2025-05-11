@@ -20,8 +20,7 @@ export const SelectableOption: React.FC<SelectableOptionProps> = ({
 	disabled = false,
 }) => {
 	// Log when component re-renders with updated props
-	useEffect(() => {
-	}, [value, selected]);
+	useEffect(() => {}, [value, selected]);
 
 	const handlePress = () => {
 		if (!disabled) {
@@ -44,7 +43,7 @@ export const SelectableOption: React.FC<SelectableOptionProps> = ({
 			<View className="flex-row items-center justify-between">
 				<Text
 					className={cn(
-						"text-base",
+						"text-base text-wrap max-w-[90%]",
 						selected ? "text-blue-700 font-medium" : "text-gray-700"
 					)}
 				>

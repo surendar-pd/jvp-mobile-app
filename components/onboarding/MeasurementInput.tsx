@@ -72,11 +72,7 @@ const MeasurementInput: React.FC<MeasurementInputProps> = ({
 		SheetManager.show(sheetId, {
 			payload: {
 				initialValue: value,
-				onValueSelected: (
-					selectedValue: number,
-					unit: string,
-					convertedMetricValue: number
-				) => {
+				onValueSelected: (convertedMetricValue: number) => {
 					// Always store the metric value in the database
 					onValueChange(convertedMetricValue);
 				},

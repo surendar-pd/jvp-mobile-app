@@ -11,7 +11,7 @@ interface WeightPickerImperialSheetProps {
 		onValueSelected?: (
 			value: number,
 			unit: string,
-			convertedValue: number
+			convertedMetricValue: number
 		) => void;
 	};
 }
@@ -19,6 +19,7 @@ interface WeightPickerImperialSheetProps {
 function WeightPickerImperialSheet(props: WeightPickerImperialSheetProps) {
 	const { payload } = props;
 	const { initialValue, onValueSelected } = payload || {};
+	const itemHeight = 50;
 
 	// Generate array of weight values in pounds (88-330 lbs)
 	const values = Array.from({ length: 243 }, (_, i) => 88 + i);
@@ -28,46 +29,70 @@ function WeightPickerImperialSheet(props: WeightPickerImperialSheetProps) {
 		if (!initialValue) return Math.floor(values.length / 2);
 
 		// Convert kg to pounds
-		const lbsValue = initialValue * 2.2046;
+		const lbsValue = Math.round(initialValue * 2.2046);
 
 		// Find closest match to the converted value
-		const bestMatchIndex = values.reduce((closestIndex, value, index) => {
-			return Math.abs(value - lbsValue) <
-				Math.abs(values[closestIndex] - lbsValue)
-				? index
-				: closestIndex;
-		}, 0);
+		let bestMatchIndex = values.findIndex((v) => v === lbsValue);
+		if (bestMatchIndex === -1) {
+			bestMatchIndex = values.reduce((closestIndex, value, index) => {
+				return Math.abs(value - lbsValue) <
+					Math.abs(values[closestIndex] - lbsValue)
+					? index
+					: closestIndex;
+			}, 0);
+		}
 
 		return bestMatchIndex;
 	};
 
 	const [currentIndex, setCurrentIndex] = useState(findInitialIndex());
 	const scrollViewRef = useRef<ScrollView>(null);
-	const itemHeight = 50;
 
-	useEffect(() => {
-		// Scroll to selected value when component mounts
+	// Helper function to scroll to a specific index
+	const scrollToIndex = (index: number, animated: boolean = true) => {
 		if (scrollViewRef.current) {
-			setTimeout(() => {
-				scrollViewRef.current?.scrollTo({
-					y: currentIndex * itemHeight,
-					animated: false,
-				});
-			}, 100);
+			scrollViewRef.current.scrollTo({
+				y: index * itemHeight,
+				animated,
+			});
 		}
+	};
+
+	// Initialize scroll position
+	useEffect(() => {
+		const timeoutId = setTimeout(() => {
+			scrollToIndex(currentIndex, false);
+		}, 100);
+
+		return () => clearTimeout(timeoutId);
 	}, []);
+
+	const handleValueChange = (index: number) => {
+		setCurrentIndex(index);
+	};
 
 	const handleConfirm = () => {
 		const value = values[currentIndex];
 		if (onValueSelected) {
 			// Convert pounds to kg for storage
 			const kgValue = value / 2.2046;
-			onValueSelected(value, "lbs", kgValue);
+            onValueSelected(value, "lbs", Math.round(kgValue));
 		}
 	};
 
 	return (
-		<ActionSheet>
+		<ActionSheet
+			onBeforeShow={() => {
+				// Reset to the correct index when showing
+				const index = findInitialIndex();
+				setCurrentIndex(index);
+
+				// Use a timeout to ensure the scroll happens after render
+				setTimeout(() => {
+					scrollToIndex(index, false);
+				}, 50);
+			}}
+		>
 			<View className="p-4 border-b border-gray-200">
 				<Text className="text-lg font-semibold text-center">
 					Select Weight (lbs)
@@ -90,7 +115,11 @@ function WeightPickerImperialSheet(props: WeightPickerImperialSheetProps) {
 					onMomentumScrollEnd={(event) => {
 						const y = event.nativeEvent.contentOffset.y;
 						const index = Math.round(y / itemHeight);
-						setCurrentIndex(Math.min(Math.max(0, index), values.length - 1));
+						handleValueChange(Math.min(Math.max(0, index), values.length - 1));
+					}}
+					contentContainerStyle={{
+						paddingTop: 100, // Add top padding to align items with the highlight
+						paddingBottom: 100, // Add bottom padding for smooth scrolling
 					}}
 				>
 					{values.map((value, index) => (
@@ -102,10 +131,7 @@ function WeightPickerImperialSheet(props: WeightPickerImperialSheetProps) {
 							)}
 							onPress={() => {
 								setCurrentIndex(index);
-								scrollViewRef.current?.scrollTo({
-									y: index * itemHeight,
-									animated: true,
-								});
+								scrollToIndex(index);
 							}}
 						>
 							<Text className="text-lg font-medium">{value} lbs</Text>

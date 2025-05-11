@@ -22,13 +22,16 @@ function HeightPickerMetricSheet(props: HeightPickerMetricSheetProps) {
 
 	// Generate array of height values in centimeters (140-220 cm)
 	const values = Array.from({ length: 81 }, (_, i) => 140 + i);
+	const itemHeight = 50;
 
 	// Find initial index based on initialValue
 	const findInitialIndex = () => {
 		if (!initialValue) return Math.floor(values.length / 2);
 
 		// Find closest match to initialValue
-		let bestMatchIndex = values.findIndex((v) => v === initialValue);
+		let bestMatchIndex = values.findIndex(
+			(v) => v === Math.round(initialValue)
+		);
 		if (bestMatchIndex === -1) {
 			bestMatchIndex = values.reduce((closestIndex, value, index, arr) => {
 				return Math.abs(value - initialValue) <
@@ -43,19 +46,29 @@ function HeightPickerMetricSheet(props: HeightPickerMetricSheetProps) {
 
 	const [currentIndex, setCurrentIndex] = useState(findInitialIndex());
 	const scrollViewRef = useRef<ScrollView>(null);
-	const itemHeight = 50;
 
+	// Handle proper alignment and initial scrolling
 	useEffect(() => {
-		// Scroll to selected value when component mounts
-		if (scrollViewRef.current) {
-			setTimeout(() => {
-				scrollViewRef.current?.scrollTo({
-					y: currentIndex * itemHeight,
-					animated: false,
-				});
-			}, 100);
-		}
+		const timeoutId = setTimeout(() => {
+			scrollToIndex(currentIndex, false);
+		}, 100);
+
+		return () => clearTimeout(timeoutId);
 	}, []);
+
+	// Helper function to scroll to a specific index
+	const scrollToIndex = (index: number, animated: boolean = true) => {
+		if (scrollViewRef.current) {
+			scrollViewRef.current.scrollTo({
+				y: index * itemHeight,
+				animated,
+			});
+		}
+	};
+
+	const handleValueChange = (index: number) => {
+		setCurrentIndex(index);
+	};
 
 	const handleConfirm = () => {
 		const value = values[currentIndex];
@@ -66,7 +79,18 @@ function HeightPickerMetricSheet(props: HeightPickerMetricSheetProps) {
 	};
 
 	return (
-		<ActionSheet>
+		<ActionSheet
+			onBeforeShow={() => {
+				// Reset to the correct index when showing
+				const index = findInitialIndex();
+				setCurrentIndex(index);
+
+				// Use a timeout to ensure the scroll happens after render
+				setTimeout(() => {
+					scrollToIndex(index, false);
+				}, 50);
+			}}
+		>
 			<View className="p-4 border-b border-gray-200">
 				<Text className="text-lg font-semibold text-center">
 					Select Height (cm)
@@ -89,7 +113,11 @@ function HeightPickerMetricSheet(props: HeightPickerMetricSheetProps) {
 					onMomentumScrollEnd={(event) => {
 						const y = event.nativeEvent.contentOffset.y;
 						const index = Math.round(y / itemHeight);
-						setCurrentIndex(Math.min(Math.max(0, index), values.length - 1));
+						handleValueChange(Math.min(Math.max(0, index), values.length - 1));
+					}}
+					contentContainerStyle={{
+						paddingTop: 100, // Add top padding to align items with the highlight
+						paddingBottom: 100, // Add bottom padding for smooth scrolling
 					}}
 				>
 					{values.map((value, index) => (
@@ -101,10 +129,7 @@ function HeightPickerMetricSheet(props: HeightPickerMetricSheetProps) {
 							)}
 							onPress={() => {
 								setCurrentIndex(index);
-								scrollViewRef.current?.scrollTo({
-									y: index * itemHeight,
-									animated: true,
-								});
+								scrollToIndex(index);
 							}}
 						>
 							<Text className="text-lg font-medium">{value} cm</Text>
