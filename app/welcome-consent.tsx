@@ -21,7 +21,7 @@ export default function WelcomeConsentScreen() {
 				colors={["transparent", "rgba(0,0,0,0.8)"]}
 			>
 				<SafeAreaView edges={["bottom"]} className="mt-auto">
-					<View className="px-6 py-8 gap-4">
+					<View className="px-4 py-8 gap-4">
 						<View className="">
 							<H1 className="text-left text-white font-bold">
 								{t("welcome.title")}
@@ -30,7 +30,7 @@ export default function WelcomeConsentScreen() {
 							<P className="text-xl text-white mt-4">{t("welcome.subtitle")}</P>
 						</View>
 					</View>
-					<View className="px-6">
+					<View className="px-4">
 						<Link href="/(auth)" prefetch={false} asChild>
 							<Button size="lg">
 								<Text>{t("button.getStarted")}</Text>

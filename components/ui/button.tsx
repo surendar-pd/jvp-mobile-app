@@ -65,7 +65,8 @@ const buttonTextVariants = cva(
 type ButtonProps = React.ComponentPropsWithoutRef<typeof Pressable> &
 	VariantProps<typeof buttonVariants> & {
 		loading?: boolean;
-		icon?: LucideIcon;
+		iconRight?: LucideIcon;
+		iconLeft?: LucideIcon;
 		iconColor?: string;
 		children: React.ReactNode;
 	};
@@ -80,7 +81,8 @@ const Button = React.forwardRef<
 			variant,
 			size,
 			loading,
-			icon: Icon,
+			iconRight: IconRight,
+			iconLeft: IconLeft,
 			iconColor,
 			children,
 			...props
@@ -108,8 +110,9 @@ const Button = React.forwardRef<
 						<ActivityIndicator size="small" color={Colors.light.tint} />
 					) : (
 						<View className="flex-row items-center gap-x-2">
-							{Icon && <Icon size={20} color={iconColor} />}
+							{IconLeft && <IconLeft size={20} color={iconColor} />}
 							{children}
+							{IconRight && <IconRight size={20} color={iconColor} />}
 						</View>
 					)}
 				</Pressable>

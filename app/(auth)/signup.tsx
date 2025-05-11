@@ -85,7 +85,7 @@ export default function Signup() {
 
 	return (
 		<ThemedView>
-			<SafeAreaView edges={["top", "bottom"]} className="flex-1 px-6">
+			<SafeAreaView edges={["top", "bottom"]} className="flex-1 px-4">
 				<KeyboardAvoidingView
 					behavior={Platform.OS === "ios" ? "padding" : "height"}
 					className="flex-1"
