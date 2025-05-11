@@ -116,7 +116,47 @@ export const personalQuestions: Question[] = [
 				databaseValue: "imperial",
 			},
 		],
-		// Note: This question would require custom input fields for height and weight values
+		inputFields: {
+			metric: [
+				{
+					id: "height_cm",
+					title: "Height (cm)",
+					placeholder: "Enter height in centimeters",
+					keyboardType: "numeric",
+					databaseTag: "height_cm",
+				},
+				{
+					id: "weight_kg",
+					title: "Weight (kg)",
+					placeholder: "Enter weight in kilograms",
+					keyboardType: "numeric",
+					databaseTag: "weight_kg",
+				},
+			],
+			imperial: [
+				{
+					id: "height_ft",
+					title: "Height (feet)",
+					placeholder: "Enter feet",
+					keyboardType: "numeric",
+					databaseTag: "height_ft",
+				},
+				{
+					id: "height_in",
+					title: "Height (inches)",
+					placeholder: "Enter inches",
+					keyboardType: "numeric",
+					databaseTag: "height_in",
+				},
+				{
+					id: "weight_lbs",
+					title: "Weight (lbs)",
+					placeholder: "Enter weight in pounds",
+					keyboardType: "numeric",
+					databaseTag: "weight_lbs",
+				},
+			],
+		},
 		databaseTag: "height_weight_unit",
 	},
 	{
@@ -138,7 +178,31 @@ export const personalQuestions: Question[] = [
 				databaseValue: "skip",
 			},
 		],
-		// Note: This would require custom input fields for contact information
+		inputFields: {
+			add: [
+				{
+					id: "emergency_contact_name",
+					title: "Contact Name",
+					placeholder: "Enter full name",
+					keyboardType: "default",
+					databaseTag: "emergency_contact_name",
+				},
+				{
+					id: "emergency_contact_relationship",
+					title: "Relationship",
+					placeholder: "E.g. Spouse, Child, Friend",
+					keyboardType: "default",
+					databaseTag: "emergency_contact_relationship",
+				},
+				{
+					id: "emergency_contact_phone",
+					title: "Phone Number",
+					placeholder: "Enter phone number",
+					keyboardType: "phone-pad",
+					databaseTag: "emergency_contact_phone",
+				},
+			],
+		},
 		databaseTag: "emergency_contact",
 	},
 	{

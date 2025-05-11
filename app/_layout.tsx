@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import "../global.css";
 import "../i18n";
+import "@/components/sheets"; // Import sheets registry
 
 import {
 	DarkTheme,
@@ -19,6 +20,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { View, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner-native";
+import { SheetProvider } from "react-native-actions-sheet";
 import { useColorScheme } from "@/lib/useColorScheme";
 import { useAuthStore } from "@/store";
 import LanguageToggle from "@/components/language-toggle";
@@ -100,33 +102,35 @@ export default function RootLayout() {
 			<ThemeProvider value={theme}>
 				<QueryClientProvider client={queryClient}>
 					<GestureHandlerRootView className="flex-1">
-						<Stack
-							initialRouteName={isLoggedIn ? "(tabs)" : "welcome-consent"}
-							screenOptions={{
-								headerShown: false,
-							}}
-						>
-							<Stack.Protected guard={isLoggedIn}>
-								<Stack.Screen name="(tabs)" />
-							</Stack.Protected>
-							<Stack.Protected guard={!isLoggedIn}>
-								<Stack.Screen
-									options={{
-										headerShown: true,
-										headerRight: () => <LanguageToggle theme="dark" />,
-										headerTransparent: true,
-										headerTitle: "",
-									}}
-									name="welcome-consent"
-								/>
-								<Stack.Screen name="(aux)" />
-								<Stack.Screen name="(auth)" />
-								<Stack.Screen name="+not-found" />
-							</Stack.Protected>
-						</Stack>
-						<StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-						<Toaster richColors position="bottom-center" />
-						<PortalHost />
+						<SheetProvider>
+							<Stack
+								initialRouteName={isLoggedIn ? "(tabs)" : "welcome-consent"}
+								screenOptions={{
+									headerShown: false,
+								}}
+							>
+								<Stack.Protected guard={isLoggedIn}>
+									<Stack.Screen name="(tabs)" />
+								</Stack.Protected>
+								<Stack.Protected guard={!isLoggedIn}>
+									<Stack.Screen
+										options={{
+											headerShown: true,
+											headerRight: () => <LanguageToggle theme="dark" />,
+											headerTransparent: true,
+											headerTitle: "",
+										}}
+										name="welcome-consent"
+									/>
+									<Stack.Screen name="(aux)" />
+									<Stack.Screen name="(auth)" />
+									<Stack.Screen name="+not-found" />
+								</Stack.Protected>
+							</Stack>
+							<StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+							<Toaster richColors position="bottom-center" />
+							<PortalHost />
+						</SheetProvider>
 					</GestureHandlerRootView>
 				</QueryClientProvider>
 			</ThemeProvider>

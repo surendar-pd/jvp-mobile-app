@@ -40,6 +40,42 @@ export const lifestyleQuestions: Question[] = [
 				databaseValue: "both",
 			},
 		],
+		inputFields: {
+			current: [
+				{
+					id: "smoking_years",
+					title: "For how many years?",
+					placeholder: "Enter number of years",
+					keyboardType: "numeric",
+					databaseTag: "smoking_years",
+				},
+			],
+			former: [
+				{
+					id: "smoking_years",
+					title: "For how many years?",
+					placeholder: "Enter number of years",
+					keyboardType: "numeric",
+					databaseTag: "smoking_years",
+				},
+				{
+					id: "quit_years",
+					title: "How many years ago did you quit?",
+					placeholder: "Enter number of years",
+					keyboardType: "numeric",
+					databaseTag: "quit_years",
+				},
+			],
+			both: [
+				{
+					id: "smoking_years",
+					title: "For how many years?",
+					placeholder: "Enter number of years",
+					keyboardType: "numeric",
+					databaseTag: "smoking_years",
+				},
+			],
+		},
 		followUpQuestions: {
 			current: {
 				id: "smoking_amount",

@@ -7,6 +7,14 @@ export type QuestionOption = {
 	infoText?: string; // Additional information to show when this option is selected
 };
 
+export type InputField = {
+	id: string;
+	title: string;
+	placeholder?: string;
+	keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
+	databaseTag: string;
+};
+
 export type Question = {
 	id: string;
 	title: string;
@@ -15,6 +23,7 @@ export type Question = {
 	skippable: boolean;
 	options: QuestionOption[];
 	followUpQuestions?: { [key: string]: Question }; // Keyed by option value
+	inputFields?: { [key: string]: InputField[] }; // Input fields to show when certain options are selected
 	databaseTag?: string;
 	category?: "personal" | "cardiac" | "medical" | "lifestyle" | "kccq";
 };

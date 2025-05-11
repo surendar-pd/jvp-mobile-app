@@ -1,11 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-	ScrollView,
-	View,
-	KeyboardAvoidingView,
-	Platform,
-	TextInput,
-} from "react-native";
+import React, { useState } from "react";
+import { ScrollView, View, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { ArrowLeft, ArrowRight, Check, AlertCircle } from "lucide-react-native";
@@ -17,10 +11,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import QuestionCard from "@/components/onboarding/QuestionCard";
 import SelectableOption from "@/components/onboarding/SelectableOption";
-import {
-	onboardingQuestions,
-	Question,
-} from "@/constants/onboarding/questions";
+import MeasurementInput from "@/components/onboarding/MeasurementInput";
+import { onboardingQuestions } from "@/constants/onboarding/questions";
 
 const OnboardingScreen = () => {
 	const [currentStep, setCurrentStep] = useState(0);
@@ -154,6 +146,7 @@ const OnboardingScreen = () => {
 	// Render the current question and its options
 	const renderCurrentQuestion = () => {
 		const currentQuestion = onboardingQuestions[currentStep];
+		const isAnswered = isCurrentQuestionAnswered();
 		const isSkipped = skipped.includes(currentStep);
 		const selectedValue = answers[currentQuestion.id];
 
@@ -182,7 +175,7 @@ const OnboardingScreen = () => {
 					selectedValue &&
 					currentQuestion.followUpQuestions[selectedValue] &&
 					followUpQuestions[currentQuestion.id] && (
-						<View className="mt-6 py-8 border-t border-gray-200">
+						<View className="mt-6 pt-4 border-t border-gray-200">
 							<Label className="mb-2">
 								{currentQuestion.followUpQuestions[selectedValue].title}
 							</Label>
@@ -219,20 +212,67 @@ const OnboardingScreen = () => {
 						</View>
 					)}
 
-				{/* Specific inputs for questions requiring text input */}
-				{currentQuestion.id === "smoking" &&
-					(selectedValue === "current" ||
-						selectedValue === "former" ||
-						selectedValue === "both") && (
-						<View className="mt-4 space-y-2 border-t border-gray-200 pt-4">
-							<Label>For how many years?</Label>
-							<Input
-								placeholder="Enter number of years"
-								keyboardType="numeric"
-								value={answers["smoking_years"] || ""}
-								onChangeText={(value) => handleAnswer("smoking_years", value)}
-								className="mt-1"
-							/>
+				{/* Special handling for height_weight question using our new picker */}
+				{currentQuestion.id === "height_weight" && selectedValue && (
+					<View className="mt-4 space-y-4 border-t border-gray-200 pt-4">
+						{selectedValue === "metric" ? (
+							<>
+								<MeasurementInput
+									type="height"
+									unitSystem="metric"
+									label="Height"
+									value={answers.height_cm}
+									onValueChange={(value) => handleAnswer("height_cm", value)}
+								/>
+								<MeasurementInput
+									type="weight"
+									unitSystem="metric"
+									label="Weight"
+									value={answers.weight_kg}
+									onValueChange={(value) => handleAnswer("weight_kg", value)}
+								/>
+							</>
+						) : (
+							<>
+								<MeasurementInput
+									type="height"
+									unitSystem="imperial"
+									label="Height"
+									value={answers.height_cm} // We still store in cm
+									onValueChange={(value) => handleAnswer("height_cm", value)}
+								/>
+								<MeasurementInput
+									type="weight"
+									unitSystem="imperial"
+									label="Weight"
+									value={answers.weight_kg} // We still store in kg
+									onValueChange={(value) => handleAnswer("weight_kg", value)}
+								/>
+							</>
+						)}
+					</View>
+				)}
+
+				{/* Render dynamic input fields for other questions */}
+				{currentQuestion.id !== "height_weight" &&
+					currentQuestion.inputFields &&
+					selectedValue &&
+					currentQuestion.inputFields[selectedValue] && (
+						<View className="mt-4 space-y-4 border-t border-gray-200 pt-4">
+							{currentQuestion.inputFields[selectedValue].map((field) => (
+								<View key={field.id} className="space-y-2">
+									<Label>{field.title}</Label>
+									<Input
+										placeholder={
+											field.placeholder || `Enter ${field.title.toLowerCase()}`
+										}
+										keyboardType={field.keyboardType || "default"}
+										value={answers[field.id] || ""}
+										onChangeText={(value) => handleAnswer(field.id, value)}
+										className="mt-1"
+									/>
+								</View>
+							))}
 						</View>
 					)}
 			</QuestionCard>
