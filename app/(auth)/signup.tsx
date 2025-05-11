@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { useForm, Controller, Control, FieldErrors } from "react-hook-form";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -148,16 +148,6 @@ export default function Signup() {
 						</Text>
 					</View>
 				</View>
-				<Text className="mb-4 text-center">
-					{t("signup.consent1")}{" "}
-					<Link href="/">
-						<Text className="text-primary">{t("signup.termsLink")}</Text>
-					</Link>{" "}
-					{t("signup.consent2")}{" "}
-					<Link href="/(aux)">
-						<Text className="text-primary">{t("signup.privacyLink")}</Text>
-					</Link>
-				</Text>
 				<Button
 					size="lg"
 					className="mt-auto"

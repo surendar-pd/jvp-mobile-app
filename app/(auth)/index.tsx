@@ -85,7 +85,7 @@ export default function Login() {
 					alt="Welcome Consent"
 					className="w-full h-1/2 object-cover object-center"
 				/>
-				<View className="gap-y-4 px-4 pt-8">
+				<View className="gap-y-4 px-6 pt-8">
 					<AuthHeader
 						heading={t("login.title")}
 						subHeading={t("login.subtitle")}
@@ -118,7 +118,7 @@ export default function Login() {
 						</Text>
 					</View>
 				</View>
-				<View className="px-4 mt-auto">
+				<View className="px-6 mt-auto">
 					<Button
 						size="lg"
 						variant="default"

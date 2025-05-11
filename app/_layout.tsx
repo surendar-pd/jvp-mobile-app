@@ -20,7 +20,8 @@ import { View, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner-native";
 import { useColorScheme } from "@/lib/useColorScheme";
-import { AuthProvider } from "../context/AuthContext";
+import { useAuthStore } from "@/store";
+import LanguageToggle from "@/components/language-toggle";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -58,6 +59,7 @@ const fontConfig = {
 };
 
 export default function RootLayout() {
+	const { isLoggedIn } = useAuthStore();
 	const { isDarkColorScheme } = useColorScheme();
 	const [loaded, error] = useFonts(fontConfig);
 
@@ -82,35 +84,52 @@ export default function RootLayout() {
 		);
 	}
 
+	// if (isLoading) {
+	// 	return (
+	// 		<View className="flex-1 justify-center items-center p-4">
+	// 			<ActivityIndicator size="small" color={theme.colors.primary} />
+	// 		</View>
+	// 	);
+	// }
+
 	if (!loaded) {
 		return null;
 	}
-
 	return (
-		<AuthProvider>
-			<ErrorBoundary FallbackComponent={ErrorFallback}>
-				<ThemeProvider value={theme}>
-					<QueryClientProvider client={queryClient}>
-						<GestureHandlerRootView className="flex-1">
-							<Stack
-								initialRouteName="welcome-consent"
-								screenOptions={{
-									headerShown: false,
-								}}
-							>
-								<Stack.Screen name="welcome-consent" />
+		<ErrorBoundary FallbackComponent={ErrorFallback}>
+			<ThemeProvider value={theme}>
+				<QueryClientProvider client={queryClient}>
+					<GestureHandlerRootView className="flex-1">
+						<Stack
+							initialRouteName={isLoggedIn ? "(tabs)" : "welcome-consent"}
+							screenOptions={{
+								headerShown: false,
+							}}
+						>
+							<Stack.Protected guard={isLoggedIn}>
+								<Stack.Screen name="(tabs)" />
+							</Stack.Protected>
+							<Stack.Protected guard={!isLoggedIn}>
+								<Stack.Screen
+									options={{
+										headerShown: true,
+										headerRight: () => <LanguageToggle theme="dark" />,
+										headerTransparent: true,
+										headerTitle: "",
+									}}
+									name="welcome-consent"
+								/>
 								<Stack.Screen name="(aux)" />
 								<Stack.Screen name="(auth)" />
-								<Stack.Screen name="(tabs)" />
 								<Stack.Screen name="+not-found" />
-							</Stack>
-							<StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-							<Toaster richColors position="bottom-center" />
-							<PortalHost />
-						</GestureHandlerRootView>
-					</QueryClientProvider>
-				</ThemeProvider>
-			</ErrorBoundary>
-		</AuthProvider>
+							</Stack.Protected>
+						</Stack>
+						<StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+						<Toaster richColors position="bottom-center" />
+						<PortalHost />
+					</GestureHandlerRootView>
+				</QueryClientProvider>
+			</ThemeProvider>
+		</ErrorBoundary>
 	);
 }
