@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { router } from "expo-router";
 import { useForm, Controller, Control, FieldErrors } from "react-hook-form";
-import { View } from "react-native";
+import { View, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { Label } from "@/components/ui/label";
@@ -85,78 +85,84 @@ export default function Signup() {
 
 	return (
 		<ThemedView>
-			<SafeAreaView edges={["top", "bottom"]} className="flex-1 px-4">
-				<AuthHeader
-					heading={t("signup.title")}
-					subHeading={t("signup.subtitle")}
-				/>
-				<View className="gap-y-4 flex-1">
-					<View>
-						<Label htmlFor="username">{t("signup.username")}</Label>
-						<FormField
-							control={control}
-							name="username"
-							placeholder={t("signup.username")}
-							autoCapitalize="words"
-							errors={errors}
-						/>
-					</View>
-					<View>
-						<Label htmlFor="email">{t("signup.email")}</Label>
-						<FormField
-							control={control}
-							name="email"
-							placeholder={t("signup.email")}
-							autoCapitalize="none"
-							keyboardType="email-address"
-							errors={errors}
-						/>
-					</View>
-					<View>
-						<Label htmlFor="password">{t("signup.password")}</Label>
-						<FormField
-							control={control}
-							name="password"
-							placeholder={t("signup.password")}
-							secureTextEntry
-							errors={errors}
-						/>
-					</View>
-					<View className="">
-						<Label htmlFor="language">{t("signup.preferredLanguage")}</Label>
-						<RadioGroup
-							value={currentLanguage}
-							onValueChange={(val) => toggleLanguage(val as "en" | "fr")}
-							className="gap-3 flex-row"
-						>
-							<RadioGroupItemWithLabel
-								value="en"
-								onLabelPress={onLabelPress("en")}
-							/>
-							<RadioGroupItemWithLabel
-								value="fr"
-								onLabelPress={onLabelPress("fr")}
-							/>
-						</RadioGroup>
-					</View>
-					<View className="">
-						<Text className="text-center">
-							{t("signup.alreadyHaveAccount")}{" "}
-							<Text onPress={() => router.back()} className="underline">
-								{t("signup.loginLink")}
-							</Text>
-						</Text>
-					</View>
-				</View>
-				<Button
-					size="lg"
-					className="mt-auto"
-					variant="default"
-					onPress={handleSubmit(onSubmit)}
-					disabled={isPending}
+			<SafeAreaView edges={["top", "bottom"]} className="flex-1 px-6">
+				<KeyboardAvoidingView
+					behavior={Platform.OS === "ios" ? "padding" : "height"}
+					className="flex-1"
+					keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
 				>
-					<Text>{t("button.signup")}</Text>
-				</Button>
+					<AuthHeader
+						heading={t("signup.title")}
+						subHeading={t("signup.subtitle")}
+					/>
+					<View className="gap-y-4 flex-1">
+						<View>
+							<Label htmlFor="username">{t("signup.username")}</Label>
+							<FormField
+								control={control}
+								name="username"
+								placeholder={t("signup.username")}
+								autoCapitalize="words"
+								errors={errors}
+							/>
+						</View>
+						<View>
+							<Label htmlFor="email">{t("signup.email")}</Label>
+							<FormField
+								control={control}
+								name="email"
+								placeholder={t("signup.email")}
+								autoCapitalize="none"
+								keyboardType="email-address"
+								errors={errors}
+							/>
+						</View>
+						<View>
+							<Label htmlFor="password">{t("signup.password")}</Label>
+							<FormField
+								control={control}
+								name="password"
+								placeholder={t("signup.password")}
+								secureTextEntry
+								errors={errors}
+							/>
+						</View>
+						<View className="">
+							<Label htmlFor="language">{t("signup.preferredLanguage")}</Label>
+							<RadioGroup
+								value={currentLanguage}
+								onValueChange={(val) => toggleLanguage(val as "en" | "fr")}
+								className="gap-3 flex-row"
+							>
+								<RadioGroupItemWithLabel
+									value="en"
+									onLabelPress={onLabelPress("en")}
+								/>
+								<RadioGroupItemWithLabel
+									value="fr"
+									onLabelPress={onLabelPress("fr")}
+								/>
+							</RadioGroup>
+						</View>
+						<View className="">
+							<Text className="text-center">
+								{t("signup.alreadyHaveAccount")}{" "}
+								<Text onPress={() => router.back()} className="underline">
+									{t("signup.loginLink")}
+								</Text>
+							</Text>
+						</View>
+					</View>
+					<Button
+						size="lg"
+						className="mt-auto"
+						variant="default"
+						onPress={handleSubmit(onSubmit)}
+						disabled={isPending}
+					>
+						<Text>{t("button.signup")}</Text>
+					</Button>
+				</KeyboardAvoidingView>
 			</SafeAreaView>
 		</ThemedView>
 	);

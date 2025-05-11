@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import type { FieldErrors, Control } from "react-hook-form";
 import { useForm, Controller } from "react-hook-form";
-import { Image, View } from "react-native";
+import { Image, View, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useTranslation } from "react-i18next";
@@ -80,54 +80,64 @@ export default function Login() {
 	return (
 		<ThemedView>
 			<SafeAreaView edges={["bottom"]} className="flex-1">
-				<Image
-					source={require("@/assets/images/hero.png")}
-					alt="Welcome Consent"
-					className="w-full h-1/2 object-cover object-center"
-				/>
-				<View className="gap-y-4 px-6 pt-8">
-					<AuthHeader
-						heading={t("login.title")}
-						subHeading={t("login.subtitle")}
+				<KeyboardAvoidingView
+					behavior={Platform.OS === "ios" ? "padding" : "height"}
+					className="flex-1"
+					keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
+				>
+					<Image
+						source={require("@/assets/images/hero.png")}
+						alt="Welcome Consent"
+						className="w-full h-1/2 object-cover object-center"
 					/>
-					<View>
-						<Label htmlFor="email">{t("login.email")}</Label>
-						<FormField
-							control={control}
-							name="email"
-							placeholder={t("login.email")}
-							autoCapitalize="none"
-							keyboardType="email-address"
-							errors={errors}
+					<View className="gap-y-4 px-6 pt-8">
+						<AuthHeader
+							heading={t("login.title")}
+							subHeading={t("login.subtitle")}
 						/>
+						<View>
+							<Label htmlFor="email">{t("login.email")}</Label>
+							<FormField
+								control={control}
+								name="email"
+								placeholder={t("login.email")}
+								autoCapitalize="none"
+								keyboardType="email-address"
+								errors={errors}
+							/>
+						</View>
+						<View>
+							<Label htmlFor="password">{t("login.password")}</Label>
+							<FormField
+								control={control}
+								name="password"
+								placeholder={t("login.password")}
+								secureTextEntry
+								errors={errors}
+							/>
+						</View>
+						<View className="flex-row items-center justify-center gap-x-2">
+							<Text>{t("login.dontHaveAccount")}</Text>
+							<Text
+								onPress={() => router.push("/signup")}
+								className="underline"
+							>
+								{t("login.signupLink")}
+							</Text>
+						</View>
 					</View>
-					<View>
-						<Label htmlFor="password">{t("login.password")}</Label>
-						<FormField
-							control={control}
-							name="password"
-							placeholder={t("login.password")}
-							secureTextEntry
-							errors={errors}
-						/>
+					<View className="px-6 mt-auto">
+						<Button
+							size="lg"
+							variant="default"
+							// onPress={handleSubmit(onSubmit)}
+							onPress={() => router.push("/(onboarding)")}
+							disabled={isPending}
+						>
+							<Text>{t("button.login")}</Text>
+						</Button>
 					</View>
-					<View className="flex-row items-center justify-center gap-x-2">
-						<Text>{t("login.dontHaveAccount")}</Text>
-						<Text onPress={() => router.push("/signup")} className="underline">
-							{t("login.signupLink")}
-						</Text>
-					</View>
-				</View>
-				<View className="px-6 mt-auto">
-					<Button
-						size="lg"
-						variant="default"
-						onPress={handleSubmit(onSubmit)}
-						disabled={isPending}
-					>
-						<Text>{t("button.login")}</Text>
-					</Button>
-				</View>
+				</KeyboardAvoidingView>
 			</SafeAreaView>
 		</ThemedView>
 	);
