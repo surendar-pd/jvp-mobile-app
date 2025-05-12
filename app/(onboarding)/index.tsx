@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import QuestionCard from "@/components/onboarding/QuestionCard";
 import SelectableOption from "@/components/onboarding/SelectableOption";
+import MultiSelectOption from "@/components/onboarding/MultiSelectOption";
 import MeasurementInput from "@/components/onboarding/MeasurementInput";
 import DOBInput from "@/components/onboarding/DOBInput";
 import { onboardingQuestions } from "@/constants/onboarding/questions";
@@ -81,6 +82,8 @@ const OnboardingScreen = () => {
 		);
 		console.log("Current answers state:", answers);
 
+		const currentQuestion = onboardingQuestions[currentStep];
+
 		// Create new state object to ensure re-render
 		const newAnswers = {
 			...answers,
@@ -91,29 +94,118 @@ const OnboardingScreen = () => {
 
 		console.log("Updated answers:", newAnswers);
 
-		// Check if this option has follow-up questions
-		const currentQuestion = onboardingQuestions[currentStep];
-		const selectedOption = currentQuestion.options.find(
-			(opt) => opt.value === value
-		);
+		// For single select questions, check if option has follow-up questions
+		if (!currentQuestion.multiSelect) {
+			const selectedOption = currentQuestion.options.find(
+				(opt) => opt.value === value
+			);
 
-		if (selectedOption?.followUp) {
-			setFollowUpQuestions({
-				...followUpQuestions,
-				[questionId]: true,
-			});
-		} else {
-			// If changing to an option without follow-up, remove any follow-up answers
-			const updatedAnswers = { ...newAnswers };
-			const updatedFollowUp = { ...followUpQuestions };
+			if (selectedOption?.followUp) {
+				setFollowUpQuestions({
+					...followUpQuestions,
+					[questionId]: true,
+				});
+			} else {
+				// If changing to an option without follow-up, remove any follow-up answers
+				const updatedAnswers = { ...newAnswers };
+				const updatedFollowUp = { ...followUpQuestions };
 
-			if (currentQuestion.followUpQuestions?.[value]) {
-				delete updatedAnswers[currentQuestion.followUpQuestions[value].id];
-				delete updatedFollowUp[questionId];
+				if (currentQuestion.followUpQuestions?.[value]) {
+					delete updatedAnswers[currentQuestion.followUpQuestions[value].id];
+					delete updatedFollowUp[questionId];
+				}
+
+				setAnswers(updatedAnswers);
+				setFollowUpQuestions(updatedFollowUp);
 			}
+		}
 
-			setAnswers(updatedAnswers);
-			setFollowUpQuestions(updatedFollowUp);
+		// Remove from skipped if it was previously skipped
+		if (skipped.includes(currentStep)) {
+			setSkipped(skipped.filter((item) => item !== currentStep));
+		}
+	};
+
+	// Handle toggling a multi-select option
+	const handleMultiSelectToggle = (questionId: string, optionValue: string) => {
+		const currentValues = answers[questionId] || [];
+		let newValues: string[];
+
+		// Toggle the selection
+		if (currentValues.includes(optionValue)) {
+			newValues = currentValues.filter((value) => value !== optionValue);
+		} else {
+			newValues = [...currentValues, optionValue];
+		}
+
+		// Update answers
+		const newAnswers = {
+			...answers,
+			[questionId]: newValues,
+		};
+
+		setAnswers(newAnswers);
+		console.log("Updated multi-select answers:", newAnswers);
+
+		// Find the current question (could be main question or a follow-up)
+		let currentQuestion = onboardingQuestions[currentStep];
+
+		// If this is a follow-up question, find it in the question structure
+		if (questionId !== currentQuestion.id) {
+			// This is a follow-up question, find its parent
+			for (const q of onboardingQuestions) {
+				if (q.followUpQuestions) {
+					// Check first level follow-ups
+					for (const [key, followUp] of Object.entries(q.followUpQuestions)) {
+						if (followUp.id === questionId) {
+							currentQuestion = followUp;
+							break;
+						}
+
+						// Check second level (nested) follow-ups
+						if (followUp.followUpQuestions) {
+							for (const [nestedKey, nestedFollowUp] of Object.entries(
+								followUp.followUpQuestions
+							)) {
+								if (nestedFollowUp.id === questionId) {
+									currentQuestion = nestedFollowUp;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Check if the toggled option has follow-up questions
+		const option = currentQuestion.options.find(
+			(opt) => opt.value === optionValue
+		);
+		const hasFollowUp = option?.followUp;
+
+		if (hasFollowUp) {
+			// If option has follow-up and was just selected, activate follow-up
+			if (newValues.includes(optionValue)) {
+				setFollowUpQuestions({
+					...followUpQuestions,
+					[`${questionId}_${optionValue}`]: true,
+				});
+			} else {
+				// If option has follow-up and was just deselected, deactivate follow-up
+				const updatedFollowUp = { ...followUpQuestions };
+				delete updatedFollowUp[`${questionId}_${optionValue}`];
+				setFollowUpQuestions(updatedFollowUp);
+
+				// Also remove follow-up answers
+				if (currentQuestion.followUpQuestions?.[optionValue]) {
+					const updatedAnswers = { ...newAnswers };
+					delete updatedAnswers[
+						currentQuestion.followUpQuestions[optionValue].id
+					];
+					setAnswers(updatedAnswers);
+				}
+			}
 		}
 
 		// Remove from skipped if it was previously skipped
@@ -125,6 +217,13 @@ const OnboardingScreen = () => {
 	// Check if current question has been answered
 	const isCurrentQuestionAnswered = (): boolean => {
 		const currentQuestion = onboardingQuestions[currentStep];
+
+		// Special handling for multi-select questions
+		if (currentQuestion.multiSelect) {
+			const selectedOptions = answers[currentQuestion.id] || [];
+			// Consider it answered if at least one option is selected
+			return selectedOptions.length > 0;
+		}
 
 		// Basic check if the question has been answered
 		const isAnswered = !!answers[currentQuestion.id];
@@ -144,6 +243,7 @@ const OnboardingScreen = () => {
 	};
 
 	const isAnswered = isCurrentQuestionAnswered();
+
 	// Render the current question and its options
 	const renderCurrentQuestion = () => {
 		const currentQuestion = onboardingQuestions[currentStep];
@@ -163,20 +263,39 @@ const OnboardingScreen = () => {
 					<View
 						className={`gap-y-2 ${!currentQuestion.followUpQuestions && "android:pb-8 ios:pb-4"}`}
 					>
-						{currentQuestion.options.map((option) => (
-							<SelectableOption
-								key={option.value}
-								value={option.value}
-								label={option.label}
-								selected={selectedValue === option.value}
-								onSelect={(value) => handleAnswer(currentQuestion.id, value)}
-							/>
-						))}
+						{currentQuestion.multiSelect
+							? // Render multi-select options
+								currentQuestion.options.map((option) => (
+									<MultiSelectOption
+										key={option.value}
+										value={option.value}
+										label={option.label}
+										selected={(answers[currentQuestion.id] || []).includes(
+											option.value
+										)}
+										onToggle={(value) =>
+											handleMultiSelectToggle(currentQuestion.id, value)
+										}
+									/>
+								))
+							: // Render single-select options
+								currentQuestion.options.map((option) => (
+									<SelectableOption
+										key={option.value}
+										value={option.value}
+										label={option.label}
+										selected={selectedValue === option.value}
+										onSelect={(value) =>
+											handleAnswer(currentQuestion.id, value)
+										}
+									/>
+								))}
 					</View>
 				)}
 
-				{/* Render follow-up question if applicable */}
-				{currentQuestion.followUpQuestions &&
+				{/* Render follow-up questions for single-select questions */}
+				{!currentQuestion.multiSelect &&
+					currentQuestion.followUpQuestions &&
 					selectedValue &&
 					currentQuestion.followUpQuestions[selectedValue] &&
 					followUpQuestions[currentQuestion.id] && (
@@ -185,25 +304,53 @@ const OnboardingScreen = () => {
 								{currentQuestion.followUpQuestions[selectedValue].title}
 							</Label>
 							<View className="">
-								{currentQuestion.followUpQuestions[selectedValue].options.map(
-									(option) => (
-										<SelectableOption
-											key={option.value}
-											value={option.value}
-											label={option.label}
-											selected={
-												answers[
-													currentQuestion.followUpQuestions[selectedValue].id
-												] === option.value
-											}
-											onSelect={(value) =>
-												handleAnswer(
-													currentQuestion.followUpQuestions[selectedValue].id,
-													value
-												)
-											}
-										/>
-									)
+								{currentQuestion.followUpQuestions[selectedValue].multiSelect
+									? // Render multi-select follow-up options
+										currentQuestion.followUpQuestions[
+											selectedValue
+										].options.map((option) => (
+											<MultiSelectOption
+												key={option.value}
+												value={option.value}
+												label={option.label}
+												selected={(
+													answers[
+														currentQuestion.followUpQuestions[selectedValue].id
+													] || []
+												).includes(option.value)}
+												onToggle={(value) =>
+													handleMultiSelectToggle(
+														currentQuestion.followUpQuestions[selectedValue].id,
+														value
+													)
+												}
+											/>
+										))
+									: // Render single-select follow-up options
+										currentQuestion.followUpQuestions[
+											selectedValue
+										].options.map((option) => (
+											<SelectableOption
+												key={option.value}
+												value={option.value}
+												label={option.label}
+												selected={
+													answers[
+														currentQuestion.followUpQuestions[selectedValue].id
+													] === option.value
+												}
+												onSelect={(value) =>
+													handleAnswer(
+														currentQuestion.followUpQuestions[selectedValue].id,
+														value
+													)
+												}
+											/>
+										))}
+
+								{/* Render nested follow-ups if applicable */}
+								{renderNestedFollowUps(
+									currentQuestion.followUpQuestions[selectedValue]
 								)}
 							</View>
 
@@ -216,6 +363,140 @@ const OnboardingScreen = () => {
 							)}
 						</View>
 					)}
+
+				{/* Render follow-up questions for multi-select questions */}
+				{currentQuestion.multiSelect &&
+					currentQuestion.followUpQuestions &&
+					(answers[currentQuestion.id] || []).map((optionValue: string) => {
+						if (
+							currentQuestion.followUpQuestions?.[optionValue] &&
+							followUpQuestions[`${currentQuestion.id}_${optionValue}`]
+						) {
+							const followUpQuestion =
+								currentQuestion.followUpQuestions[optionValue];
+							return (
+								<View
+									key={followUpQuestion.id}
+									className="mt-6 py-4 android:pb-8 border-t border-gray-200"
+								>
+									<Label className="mb-2">{followUpQuestion.title}</Label>
+									<View>
+										{followUpQuestion.multiSelect
+											? // Render multi-select follow-up options
+												followUpQuestion.options.map((option) => (
+													<MultiSelectOption
+														key={option.value}
+														value={option.value}
+														label={option.label}
+														selected={(
+															answers[followUpQuestion.id] || []
+														).includes(option.value)}
+														onToggle={(value) =>
+															handleMultiSelectToggle(
+																followUpQuestion.id,
+																value
+															)
+														}
+													/>
+												))
+											: // Render single-select follow-up options
+												followUpQuestion.options.map((option) => (
+													<SelectableOption
+														key={option.value}
+														value={option.value}
+														label={option.label}
+														selected={
+															answers[followUpQuestion.id] === option.value
+														}
+														onSelect={(value) =>
+															handleAnswer(followUpQuestion.id, value)
+														}
+													/>
+												))}
+
+										{/* Render any nested follow-ups for each selected option in the multi-select */}
+										{followUpQuestion.multiSelect &&
+											followUpQuestion.followUpQuestions &&
+											(answers[followUpQuestion.id] || []).map(
+												(nestedOptionValue: string) => {
+													if (
+														followUpQuestion.followUpQuestions?.[
+															nestedOptionValue
+														] &&
+														followUpQuestions[
+															`${followUpQuestion.id}_${nestedOptionValue}`
+														]
+													) {
+														const nestedFollowUp =
+															followUpQuestion.followUpQuestions[
+																nestedOptionValue
+															];
+														return (
+															<View
+																key={nestedFollowUp.id}
+																className="mt-4 pt-4 border-t border-gray-200 ml-4"
+															>
+																<Label className="mb-2 text-blue-700">
+																	{nestedFollowUp.title}
+																</Label>
+																<View>
+																	{nestedFollowUp.multiSelect
+																		? // Render nested multi-select options
+																			nestedFollowUp.options.map((option) => (
+																				<MultiSelectOption
+																					key={option.value}
+																					value={option.value}
+																					label={option.label}
+																					selected={(
+																						answers[nestedFollowUp.id] || []
+																					).includes(option.value)}
+																					onToggle={(value) =>
+																						handleMultiSelectToggle(
+																							nestedFollowUp.id,
+																							value
+																						)
+																					}
+																				/>
+																			))
+																		: // Render nested single-select options
+																			nestedFollowUp.options.map((option) => (
+																				<SelectableOption
+																					key={option.value}
+																					value={option.value}
+																					label={option.label}
+																					selected={
+																						answers[nestedFollowUp.id] ===
+																						option.value
+																					}
+																					onSelect={(value) =>
+																						handleAnswer(
+																							nestedFollowUp.id,
+																							value
+																						)
+																					}
+																				/>
+																			))}
+																</View>
+															</View>
+														);
+													}
+													return null;
+												}
+											)}
+									</View>
+
+									{followUpQuestion.infoText && (
+										<View className="mt-4 bg-blue-50 p-3 rounded-md">
+											<Text className="text-sm text-blue-700">
+												{followUpQuestion.infoText}
+											</Text>
+										</View>
+									)}
+								</View>
+							);
+						}
+						return null;
+					})}
 
 				{/* Special handling for height_weight question using our new picker */}
 				{currentQuestion.id === "height_weight" && selectedValue && (
@@ -292,6 +573,115 @@ const OnboardingScreen = () => {
 						</View>
 					)}
 			</QuestionCard>
+		);
+	};
+
+	// Helper function to render nested follow-ups
+	const renderNestedFollowUps = (question: any) => {
+		if (!question || !question.followUpQuestions) return null;
+
+		const selectedValue = answers[question.id];
+		if (!selectedValue || !question.followUpQuestions[selectedValue])
+			return null;
+
+		// Only render if this follow-up is active
+		if (!followUpQuestions[question.id]) return null;
+
+		const followUpQuestion = question.followUpQuestions[selectedValue];
+
+		return (
+			<View className="mt-4 pt-4 border-t border-gray-200">
+				<Label className="mb-2">{followUpQuestion.title}</Label>
+				<View>
+					{followUpQuestion.multiSelect
+						? // Render multi-select nested follow-up options
+							followUpQuestion.options.map((option) => (
+								<MultiSelectOption
+									key={option.value}
+									value={option.value}
+									label={option.label}
+									selected={(answers[followUpQuestion.id] || []).includes(
+										option.value
+									)}
+									onToggle={(value) =>
+										handleMultiSelectToggle(followUpQuestion.id, value)
+									}
+								/>
+							))
+						: // Render single-select nested follow-up options
+							followUpQuestion.options.map((option) => (
+								<SelectableOption
+									key={option.value}
+									value={option.value}
+									label={option.label}
+									selected={answers[followUpQuestion.id] === option.value}
+									onSelect={(value) => handleAnswer(followUpQuestion.id, value)}
+								/>
+							))}
+
+					{/* Render any nested follow-ups for each selected option in the multi-select */}
+					{followUpQuestion.multiSelect &&
+						followUpQuestion.followUpQuestions &&
+						(answers[followUpQuestion.id] || []).map(
+							(nestedOptionValue: string) => {
+								if (
+									followUpQuestion.followUpQuestions?.[nestedOptionValue] &&
+									followUpQuestions[
+										`${followUpQuestion.id}_${nestedOptionValue}`
+									]
+								) {
+									const nestedFollowUp =
+										followUpQuestion.followUpQuestions[nestedOptionValue];
+									return (
+										<View
+											key={nestedFollowUp.id}
+											className="mt-4 pt-4 border-t border-gray-200 ml-4"
+										>
+											<Label className="mb-2 text-blue-700">
+												{nestedFollowUp.title}
+											</Label>
+											<View>
+												{nestedFollowUp.multiSelect
+													? // Render nested multi-select options
+														nestedFollowUp.options.map((option) => (
+															<MultiSelectOption
+																key={option.value}
+																value={option.value}
+																label={option.label}
+																selected={(
+																	answers[nestedFollowUp.id] || []
+																).includes(option.value)}
+																onToggle={(value) =>
+																	handleMultiSelectToggle(
+																		nestedFollowUp.id,
+																		value
+																	)
+																}
+															/>
+														))
+													: // Render nested single-select options
+														nestedFollowUp.options.map((option) => (
+															<SelectableOption
+																key={option.value}
+																value={option.value}
+																label={option.label}
+																selected={
+																	answers[nestedFollowUp.id] === option.value
+																}
+																onSelect={(value) =>
+																	handleAnswer(nestedFollowUp.id, value)
+																}
+															/>
+														))}
+											</View>
+										</View>
+									);
+								}
+								return null;
+							}
+						)}
+				</View>
+			</View>
 		);
 	};
 

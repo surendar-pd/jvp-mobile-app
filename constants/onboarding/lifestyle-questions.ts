@@ -344,6 +344,7 @@ export const lifestyleQuestions: Question[] = [
 					"Do you experience any of the following? (Select all that apply)",
 				description: "These symptoms may indicate sleep apnea.",
 				skippable: true,
+				multiSelect: true,
 				options: [
 					{
 						value: "tired",
@@ -361,21 +362,33 @@ export const lifestyleQuestions: Question[] = [
 					},
 					{
 						value: "nap",
-						label:
-							"Feel like you need an afternoon nap despite being in bed for 7 hours the night before",
+						label: "Feel like you need to nap after a full night's sleep",
 						databaseTag: "OSA",
 						databaseValue: "possible-symptoms",
 					},
 					{
-						value: "dizzy",
-						label:
-							"Have random episodes of feeling dizzy despite remaining seated",
+						value: "snore",
+						label: "Snore loudly or have been told you snore loudly",
 						databaseTag: "OSA",
 						databaseValue: "possible-symptoms",
 					},
 					{
-						value: "family",
-						label: "Have family members diagnosed with sleep apnea",
+						value: "gasp",
+						label:
+							"Wake up gasping or choking or have been told you stop breathing during sleep",
+						databaseTag: "OSA",
+						databaseValue: "high-risk-symptoms",
+						followUp: true,
+					},
+					{
+						value: "morning-headache",
+						label: "Wake up with headaches in the morning",
+						databaseTag: "OSA",
+						databaseValue: "possible-symptoms",
+					},
+					{
+						value: "family-history",
+						label: "Have a family history of sleep apnea",
 						databaseTag: "OSA",
 						databaseValue: "family-history",
 					},
@@ -386,7 +399,91 @@ export const lifestyleQuestions: Question[] = [
 						databaseValue: "no-symptoms",
 					},
 				],
+				followUpQuestions: {
+					gasp: {
+						id: "sleep_test_interest",
+						title:
+							"Would you be interested in a sleep test to evaluate for sleep apnea?",
+						description:
+							"Sleep apnea is a risk factor for various heart conditions and can be treated.",
+						skippable: true,
+						options: [
+							{
+								value: "yes",
+								label: "Yes, I'm interested",
+								databaseTag: "OSA_TEST",
+								databaseValue: "interested",
+							},
+							{
+								value: "already-tested",
+								label: "I've already been tested",
+								databaseTag: "OSA_TEST",
+								databaseValue: "already-tested",
+							},
+							{
+								value: "no",
+								label: "No, not interested",
+								databaseTag: "OSA_TEST",
+								databaseValue: "not-interested",
+							},
+						],
+						databaseTag: "OSA_TEST",
+					},
+				},
 				databaseTag: "OSA",
+			},
+			yes: {
+				id: "sleep_treatment",
+				title:
+					"Are you currently using any of these treatments for sleep apnea?",
+				description: "Select all treatments you're currently using.",
+				skippable: true,
+				multiSelect: true,
+				options: [
+					{
+						value: "cpap",
+						label: "CPAP (Continuous Positive Airway Pressure) machine",
+						databaseTag: "OSA_TX",
+						databaseValue: "cpap",
+					},
+					{
+						value: "bipap",
+						label: "BiPAP machine",
+						databaseTag: "OSA_TX",
+						databaseValue: "bipap",
+					},
+					{
+						value: "oral-appliance",
+						label: "Oral appliance (mouthpiece)",
+						databaseTag: "OSA_TX",
+						databaseValue: "oral-appliance",
+					},
+					{
+						value: "surgery",
+						label: "Surgery for sleep apnea",
+						databaseTag: "OSA_TX",
+						databaseValue: "surgery",
+					},
+					{
+						value: "weight-loss",
+						label: "Weight loss program",
+						databaseTag: "OSA_TX",
+						databaseValue: "weight-loss",
+					},
+					{
+						value: "position-therapy",
+						label: "Positional therapy (side sleeping)",
+						databaseTag: "OSA_TX",
+						databaseValue: "position-therapy",
+					},
+					{
+						value: "none",
+						label: "No treatment at this time",
+						databaseTag: "OSA_TX",
+						databaseValue: "none",
+					},
+				],
+				databaseTag: "OSA_TX",
 			},
 			"not-sure": {
 				id: "sleep_symptoms",
@@ -394,6 +491,7 @@ export const lifestyleQuestions: Question[] = [
 					"Do you experience any of the following? (Select all that apply)",
 				description: "These symptoms may indicate sleep apnea.",
 				skippable: true,
+				multiSelect: true,
 				options: [
 					{
 						value: "tired",
@@ -411,21 +509,33 @@ export const lifestyleQuestions: Question[] = [
 					},
 					{
 						value: "nap",
-						label:
-							"Feel like you need an afternoon nap despite being in bed for 7 hours the night before",
+						label: "Feel like you need to nap after a full night's sleep",
 						databaseTag: "OSA",
 						databaseValue: "possible-symptoms",
 					},
 					{
-						value: "dizzy",
-						label:
-							"Have random episodes of feeling dizzy despite remaining seated",
+						value: "snore",
+						label: "Snore loudly or have been told you snore loudly",
 						databaseTag: "OSA",
 						databaseValue: "possible-symptoms",
 					},
 					{
-						value: "family",
-						label: "Have family members diagnosed with sleep apnea",
+						value: "gasp",
+						label:
+							"Wake up gasping or choking or have been told you stop breathing during sleep",
+						databaseTag: "OSA",
+						databaseValue: "high-risk-symptoms",
+						followUp: true,
+					},
+					{
+						value: "morning-headache",
+						label: "Wake up with headaches in the morning",
+						databaseTag: "OSA",
+						databaseValue: "possible-symptoms",
+					},
+					{
+						value: "family-history",
+						label: "Have a family history of sleep apnea",
 						databaseTag: "OSA",
 						databaseValue: "family-history",
 					},
@@ -436,6 +546,37 @@ export const lifestyleQuestions: Question[] = [
 						databaseValue: "no-symptoms",
 					},
 				],
+				followUpQuestions: {
+					gasp: {
+						id: "sleep_test_interest",
+						title:
+							"Would you be interested in a sleep test to evaluate for sleep apnea?",
+						description:
+							"Sleep apnea is a risk factor for various heart conditions and can be treated.",
+						skippable: true,
+						options: [
+							{
+								value: "yes",
+								label: "Yes, I'm interested",
+								databaseTag: "OSA_TEST",
+								databaseValue: "interested",
+							},
+							{
+								value: "already-tested",
+								label: "I've already been tested",
+								databaseTag: "OSA_TEST",
+								databaseValue: "already-tested",
+							},
+							{
+								value: "no",
+								label: "No, not interested",
+								databaseTag: "OSA_TEST",
+								databaseValue: "not-interested",
+							},
+						],
+						databaseTag: "OSA_TEST",
+					},
+				},
 				databaseTag: "OSA",
 			},
 		},

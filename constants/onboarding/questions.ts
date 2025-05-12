@@ -21,6 +21,7 @@ export type Question = {
 	description?: string;
 	infoText?: string;
 	skippable: boolean;
+	multiSelect?: boolean; // Whether multiple options can be selected
 	options: QuestionOption[];
 	followUpQuestions?: { [key: string]: Question }; // Keyed by option value
 	inputFields?: { [key: string]: InputField[] }; // Input fields to show when certain options are selected

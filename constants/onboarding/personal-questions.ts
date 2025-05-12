@@ -201,12 +201,14 @@ export const personalQuestions: Question[] = [
 				title: "Which family members have heart disease?",
 				description: "Select all that apply.",
 				skippable: true,
+				multiSelect: true, // Enable multi-select for this question
 				options: [
 					{
 						value: "parents",
 						label: "Parents",
 						databaseTag: "SOCH1",
 						databaseValue: "parents",
+						followUp: true,
 					},
 					{
 						value: "grandparents",
@@ -239,6 +241,60 @@ export const personalQuestions: Question[] = [
 						databaseValue: "children",
 					},
 				],
+				followUpQuestions: {
+					parents: {
+						id: "diagnosis",
+						title: "What heart conditions do your parents have?",
+						description: "Select all that apply.",
+						skippable: true,
+						multiSelect: true, // Enable multi-select for nested follow-up
+						options: [
+							{
+								value: "heart-attack",
+								label: "Heart Attack",
+								databaseTag: "SOCH2",
+								databaseValue: "heart-attack",
+							},
+							{
+								value: "heart-failure",
+								label: "Heart Failure",
+								databaseTag: "SOCH2",
+								databaseValue: "heart-failure",
+							},
+							{
+								value: "arrhythmia",
+								label: "Arrhythmia (irregular heart rhythm)",
+								databaseTag: "SOCH2",
+								databaseValue: "arrhythmia",
+							},
+							{
+								value: "valve-disease",
+								label: "Heart Valve Disease",
+								databaseTag: "SOCH2",
+								databaseValue: "valve-disease",
+							},
+							{
+								value: "coronary-artery",
+								label: "Coronary Artery Disease",
+								databaseTag: "SOCH2",
+								databaseValue: "coronary-artery",
+							},
+							{
+								value: "congenital",
+								label: "Congenital Heart Defect",
+								databaseTag: "SOCH2",
+								databaseValue: "congenital",
+							},
+							{
+								value: "other",
+								label: "Other heart condition",
+								databaseTag: "SOCH2",
+								databaseValue: "other",
+							},
+						],
+						databaseTag: "SOCH2",
+					},
+				},
 				databaseTag: "SOCH1",
 			},
 		},
