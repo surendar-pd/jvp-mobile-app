@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import QuestionCard from "@/components/onboarding/QuestionCard";
 import SelectableOption from "@/components/onboarding/SelectableOption";
 import MeasurementInput from "@/components/onboarding/MeasurementInput";
+import DOBInput from "@/components/onboarding/DOBInput";
 import { onboardingQuestions } from "@/constants/onboarding/questions";
 
 const OnboardingScreen = () => {
@@ -158,28 +159,32 @@ const OnboardingScreen = () => {
 				isAnswered={isAnswered}
 				isSkipped={isSkipped}
 			>
-				<View className="space-y-2">
-					{currentQuestion.options.map((option) => (
-						<SelectableOption
-							key={option.value}
-							value={option.value}
-							label={option.label}
-							selected={selectedValue === option.value}
-							onSelect={(value) => handleAnswer(currentQuestion.id, value)}
-						/>
-					))}
-				</View>
+				{currentQuestion.options.length > 0 && (
+					<View
+						className={`gap-y-2 ${!currentQuestion.followUpQuestions && "android:pb-8 ios:pb-4"}`}
+					>
+						{currentQuestion.options.map((option) => (
+							<SelectableOption
+								key={option.value}
+								value={option.value}
+								label={option.label}
+								selected={selectedValue === option.value}
+								onSelect={(value) => handleAnswer(currentQuestion.id, value)}
+							/>
+						))}
+					</View>
+				)}
 
 				{/* Render follow-up question if applicable */}
 				{currentQuestion.followUpQuestions &&
 					selectedValue &&
 					currentQuestion.followUpQuestions[selectedValue] &&
 					followUpQuestions[currentQuestion.id] && (
-						<View className="mt-6 py-4 border-t border-gray-200">
+						<View className="mt-6 py-4 android:pb-8 border-t border-gray-200">
 							<Label className="mb-2">
 								{currentQuestion.followUpQuestions[selectedValue].title}
 							</Label>
-							<View className="space-y-2 mt-2">
+							<View className="">
 								{currentQuestion.followUpQuestions[selectedValue].options.map(
 									(option) => (
 										<SelectableOption
@@ -214,7 +219,7 @@ const OnboardingScreen = () => {
 
 				{/* Special handling for height_weight question using our new picker */}
 				{currentQuestion.id === "height_weight" && selectedValue && (
-					<View className="mt-4 space-y-4 border-t border-gray-200 py-4">
+					<View className="mt-4 border-t border-gray-200 py-4">
 						{selectedValue === "metric" ? (
 							<>
 								<MeasurementInput
@@ -253,14 +258,24 @@ const OnboardingScreen = () => {
 					</View>
 				)}
 
+				{/* Special handling for date_of_birth question - directly show DOB picker */}
+				{currentQuestion.id === "date_of_birth" && (
+					<DOBInput
+						label="Date of Birth"
+						value={answers.birth_date}
+						onValueChange={(value) => handleAnswer("birth_date", value)}
+					/>
+				)}
+
 				{/* Render dynamic input fields for other questions */}
 				{currentQuestion.id !== "height_weight" &&
+					currentQuestion.id !== "date_of_birth" &&
 					currentQuestion.inputFields &&
 					selectedValue &&
 					currentQuestion.inputFields[selectedValue] && (
 						<View className="mt-4 gap-y-4 border-t border-gray-200 py-4">
 							{currentQuestion.inputFields[selectedValue].map((field) => (
-								<View key={field.id} className="space-y-2">
+								<View key={field.id} className="">
 									<Label>{field.title}</Label>
 									<Input
 										placeholder={

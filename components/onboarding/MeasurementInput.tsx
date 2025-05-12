@@ -86,7 +86,7 @@ const MeasurementInput: React.FC<MeasurementInputProps> = ({
 			<TouchableOpacity
 				onPress={openPicker}
 				className={cn(
-					"flex-row items-center justify-between mt-1 p-3 border rounded-md",
+					"flex-row items-center justify-between mt-1 p-4 border rounded-md",
 					displayValue ? "border-input" : "border-gray-300"
 				)}
 			>

@@ -29,6 +29,60 @@ export const personalQuestions: Question[] = [
 		databaseTag: "gender",
 	},
 	{
+		id: "date_of_birth",
+		title: "What is your date of birth?",
+		description: "This helps us provide age-appropriate care recommendations.",
+		skippable: true,
+		options: [],
+		databaseTag: "dob",
+	},
+	{
+		id: "emergency_contact",
+		title: "Enter emergency contact information",
+		description: "This person may be contacted in case of emergency.",
+		skippable: true,
+		options: [
+			{
+				value: "add",
+				label: "Add emergency contact",
+				databaseTag: "emergency_contact",
+				databaseValue: "add",
+			},
+			{
+				value: "skip",
+				label: "Skip for now",
+				databaseTag: "emergency_contact",
+				databaseValue: "skip",
+			},
+		],
+		inputFields: {
+			add: [
+				{
+					id: "emergency_contact_name",
+					title: "Contact Name",
+					placeholder: "Enter full name",
+					keyboardType: "default",
+					databaseTag: "emergency_contact_name",
+				},
+				{
+					id: "emergency_contact_relationship",
+					title: "Relationship",
+					placeholder: "E.g. Spouse, Child, Friend",
+					keyboardType: "default",
+					databaseTag: "emergency_contact_relationship",
+				},
+				{
+					id: "emergency_contact_phone",
+					title: "Phone Number",
+					placeholder: "Enter phone number",
+					keyboardType: "phone-pad",
+					databaseTag: "emergency_contact_phone",
+				},
+			],
+		},
+		databaseTag: "emergency_contact",
+	},
+	{
 		id: "ethnicity",
 		title: "What ethnicity are you?",
 		description: "This information helps us provide more personalized care.",
@@ -116,95 +170,9 @@ export const personalQuestions: Question[] = [
 				databaseValue: "imperial",
 			},
 		],
-		inputFields: {
-			metric: [
-				{
-					id: "height_cm",
-					title: "Height (cm)",
-					placeholder: "Enter height in centimeters",
-					keyboardType: "numeric",
-					databaseTag: "height_cm",
-				},
-				{
-					id: "weight_kg",
-					title: "Weight (kg)",
-					placeholder: "Enter weight in kilograms",
-					keyboardType: "numeric",
-					databaseTag: "weight_kg",
-				},
-			],
-			imperial: [
-				{
-					id: "height_ft",
-					title: "Height (feet)",
-					placeholder: "Enter feet",
-					keyboardType: "numeric",
-					databaseTag: "height_ft",
-				},
-				{
-					id: "height_in",
-					title: "Height (inches)",
-					placeholder: "Enter inches",
-					keyboardType: "numeric",
-					databaseTag: "height_in",
-				},
-				{
-					id: "weight_lbs",
-					title: "Weight (lbs)",
-					placeholder: "Enter weight in pounds",
-					keyboardType: "numeric",
-					databaseTag: "weight_lbs",
-				},
-			],
-		},
 		databaseTag: "height_weight_unit",
 	},
-	{
-		id: "emergency_contact",
-		title: "Enter emergency contact information",
-		description: "This person may be contacted in case of emergency.",
-		skippable: true,
-		options: [
-			{
-				value: "add",
-				label: "Add emergency contact",
-				databaseTag: "emergency_contact",
-				databaseValue: "add",
-			},
-			{
-				value: "skip",
-				label: "Skip for now",
-				databaseTag: "emergency_contact",
-				databaseValue: "skip",
-			},
-		],
-		inputFields: {
-			add: [
-				{
-					id: "emergency_contact_name",
-					title: "Contact Name",
-					placeholder: "Enter full name",
-					keyboardType: "default",
-					databaseTag: "emergency_contact_name",
-				},
-				{
-					id: "emergency_contact_relationship",
-					title: "Relationship",
-					placeholder: "E.g. Spouse, Child, Friend",
-					keyboardType: "default",
-					databaseTag: "emergency_contact_relationship",
-				},
-				{
-					id: "emergency_contact_phone",
-					title: "Phone Number",
-					placeholder: "Enter phone number",
-					keyboardType: "phone-pad",
-					databaseTag: "emergency_contact_phone",
-				},
-			],
-		},
-		databaseTag: "emergency_contact",
-	},
+
 	{
 		id: "family_history",
 		title: "Is there a family history of heart disease?",
