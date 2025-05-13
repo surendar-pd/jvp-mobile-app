@@ -34,7 +34,7 @@ const QuestionCard = ({
 			<View className="mt-2">{children}</View>
 			{infoText && (
 				<View className="mt-4 bg-blue-50 p-3 rounded-md">
-					<P className="text-sm text-blue-700">{infoText}</P>
+					<P className="text-sm text-center text-blue-700">{infoText}</P>
 				</View>
 			)}
 		</>

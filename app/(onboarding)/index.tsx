@@ -15,6 +15,7 @@ import MultiSelectOption from "@/components/onboarding/MultiSelectOption";
 import MeasurementInput from "@/components/onboarding/MeasurementInput";
 import DOBInput from "@/components/onboarding/DOBInput";
 import { onboardingQuestions } from "@/constants/onboarding/questions";
+import MedicationInput from "@/components/onboarding/MedicationInput";
 
 const OnboardingScreen = () => {
 	const [currentStep, setCurrentStep] = useState(0);
@@ -84,6 +85,7 @@ const OnboardingScreen = () => {
 
 		const currentQuestion = onboardingQuestions[currentStep];
 
+		// Regular handling for other question types
 		// Create new state object to ensure re-render
 		const newAnswers = {
 			...answers,
@@ -133,7 +135,9 @@ const OnboardingScreen = () => {
 
 		// Toggle the selection
 		if (currentValues.includes(optionValue)) {
-			newValues = currentValues.filter((value) => value !== optionValue);
+			newValues = currentValues.filter(
+				(value: string) => value !== optionValue
+			);
 		} else {
 			newValues = [...currentValues, optionValue];
 		}
@@ -223,6 +227,22 @@ const OnboardingScreen = () => {
 			const selectedOptions = answers[currentQuestion.id] || [];
 			// Consider it answered if at least one option is selected
 			return selectedOptions.length > 0;
+		}
+
+		// Special handling for current_medications question
+		if (currentQuestion.id === "current_medications") {
+			// If "yes" is selected, ensure at least one medication is added
+			if (answers[currentQuestion.id] === "yes") {
+				const medicationList = answers.medication_list;
+				// Check if medication list exists and has at least one item
+				return (
+					!!medicationList &&
+					Array.isArray(medicationList) &&
+					medicationList.length > 0
+				);
+			}
+			// For "no" or other options, basic check is sufficient
+			return !!answers[currentQuestion.id];
 		}
 
 		// Basic check if the question has been answered
@@ -356,7 +376,7 @@ const OnboardingScreen = () => {
 
 							{currentQuestion.followUpQuestions[selectedValue].infoText && (
 								<View className="mt-4 bg-blue-50 p-3 rounded-md">
-									<Text className="text-sm text-blue-700">
+									<Text className="text-sm text-blue-700 text-center">
 										{currentQuestion.followUpQuestions[selectedValue].infoText}
 									</Text>
 								</View>
@@ -487,7 +507,7 @@ const OnboardingScreen = () => {
 
 									{followUpQuestion.infoText && (
 										<View className="mt-4 bg-blue-50 p-3 rounded-md">
-											<Text className="text-sm text-blue-700">
+											<Text className="text-sm text-blue-700 text-center">
 												{followUpQuestion.infoText}
 											</Text>
 										</View>
@@ -498,6 +518,13 @@ const OnboardingScreen = () => {
 						return null;
 					})}
 
+				{currentQuestion.id === "current_medications" &&
+					selectedValue === "yes" && (
+						<MedicationInput
+							value={answers.medication_list}
+							onValueChange={(value) => handleAnswer("medication_list", value)}
+						/>
+					)}
 				{/* Special handling for height_weight question using our new picker */}
 				{currentQuestion.id === "height_weight" && selectedValue && (
 					<View className="mt-4 border-t border-gray-200 py-4">

@@ -1,77 +1,83 @@
 {
-  "expo": {
-    "name": "jvp-mobile-app",
-    "slug": "jvp-mobile-app",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.s-p-d.jvpmobileapp"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.s_p_d.jvpmobileapp",
-      "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
-      ]
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "server",
-      "favicon": "./assets/images/favicon.png"
-    },
-    "plugins": [
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
-          "recordAudioAndroid": true
-        }
-      ],
-      [
-        "expo-router",
-        {
-          "origin": "http://localhost:8081"
-        }
-      ],
-      [
-        "expo-document-picker",
-        {
-          "iCloudContainerEnvironment": "Production"
-        }
-      ],
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
-        }
-      ],
-      "expo-font",
-      "expo-secure-store",
-      "expo-web-browser"
-    ],
-    "experiments": {
-      "typedRoutes": true
-    },
-    "extra": {
-      "router": {
-        "origin": "http://localhost:8081"
-      },
-      "eas": {
-        "projectId": "6ab4dbd2-ed3c-4a82-999f-68669ebe1222"
-      }
-    }
-  }
+	"expo": {
+		"name": "jvp-mobile-app",
+		"slug": "jvp-mobile-app",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/images/icon.png",
+		"scheme": "myapp",
+		"userInterfaceStyle": "light",
+		"newArchEnabled": true,
+		"ios": {
+			"supportsTablet": true,
+			"bundleIdentifier": "com.s-p-d.jvpmobileapp"
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/images/adaptive-icon.png",
+				"backgroundColor": "#ffffff"
+			},
+			"package": "com.s_p_d.jvpmobileapp",
+			"permissions": [
+				"android.permission.CAMERA",
+				"android.permission.RECORD_AUDIO"
+			]
+		},
+		"web": {
+			"bundler": "metro",
+			"output": "server",
+			"favicon": "./assets/images/favicon.png"
+		},
+		"plugins": [
+			[
+				"expo-camera",
+				{
+					"cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+					"microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+					"recordAudioAndroid": true
+				}
+			],
+			[
+				"expo-router",
+				{
+					"origin": "http://localhost:8081"
+				}
+			],
+			[
+				"expo-document-picker",
+				{
+					"iCloudContainerEnvironment": "Production"
+				}
+			],
+			[
+				"expo-image-picker",
+				{
+					"photosPermission": "The app accesses your photos to let you share them with your friends."
+				}
+			],
+			[
+				"expo-splash-screen",
+				{
+					"image": "./assets/images/splash-icon.png",
+					"imageWidth": 200,
+					"resizeMode": "contain",
+					"backgroundColor": "#ffffff"
+				}
+			],
+			"expo-font",
+			"expo-secure-store",
+			"expo-web-browser"
+		],
+		"experiments": {
+			"typedRoutes": true
+		},
+		"extra": {
+			"router": {
+				"origin": "http://localhost:8081"
+			},
+			"eas": {
+				"projectId": "6ab4dbd2-ed3c-4a82-999f-68669ebe1222"
+			}
+		}
+	}
 }

@@ -2,6 +2,41 @@ import { Question } from "./questions";
 
 export const medicalQuestions: Question[] = [
 	{
+		id: "current_medications",
+		title: "Are you currently taking any medications?",
+		skippable: true,
+		options: [
+			{
+				value: "yes",
+				label: "Yes",
+				followUp: true,
+				databaseTag: "MEDICATIONS",
+				databaseValue: "yes",
+			},
+			{
+				value: "no",
+				label: "No",
+				databaseTag: "MEDICATIONS",
+				databaseValue: "no",
+			},
+		],
+		followUpQuestions: {
+			yes: {
+				id: "medication_list",
+				title: "Please list all your current medications",
+				infoText:
+					"Before proceeding, please check whether your medications list are correct.",
+
+				description:
+					"Add each medication with its dosage and how often you take it. You can also upload a photo of your prescription or medication label.",
+				skippable: true,
+				options: [], // No predefined options for this question type
+				databaseTag: "MEDICATION_LIST",
+			},
+		},
+		databaseTag: "MEDICATIONS",
+	},
+	{
 		id: "high_blood_pressure",
 		title: "Have you ever been diagnosed with high blood pressure?",
 		skippable: true,
