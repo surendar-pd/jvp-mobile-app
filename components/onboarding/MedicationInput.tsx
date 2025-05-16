@@ -5,13 +5,10 @@ import { Text } from "@/components/ui/text";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useMedicationImageProcessing } from "@/hooks/useMedicationImageProcessing";
-
-type Medication = {
-	name: string;
-	dosage: string;
-	occurrence: string;
-};
+import {
+	Medication,
+	useMedicationImageProcessing,
+} from "@/hooks/useMedicationImageProcessing";
 
 type MedicationInputProps = {
 	value?: Medication[];
@@ -30,9 +27,12 @@ const MedicationInput = ({
 	const [showAddForm, setShowAddForm] = useState(false);
 	const [editIndex, setEditIndex] = useState<number | null>(null);
 	const [newMedication, setNewMedication] = useState<Medication>({
-		name: "",
+		original: "",
+		corrected: "",
+		matched: false,
+		category: null,
 		dosage: "",
-		occurrence: "",
+		frequency: "",
 	});
 
 	// Use our custom hook for image processing
@@ -63,14 +63,12 @@ const MedicationInput = ({
 
 	// Effect to handle successful image processing
 	useEffect(() => {
-		if (isSuccess && processingResult && processingResult.medications) {
-			const apiMedications = processingResult.medications.map(
-				(med: Medication) => ({
-					name: med.name || "",
-					dosage: med.dosage || "",
-					occurrence: med.occurrence || "",
-				})
-			);
+		if (
+			isSuccess &&
+			processingResult &&
+			processingResult.correctedMedications
+		) {
+			const apiMedications = processingResult.correctedMedications;
 
 			if (apiMedications.length > 0) {
 				// Add these medications to our list
@@ -82,7 +80,7 @@ const MedicationInput = ({
 				);
 			}
 		}
-	}, [isSuccess, processingResult]);
+	}, [isSuccess]);
 
 	// Updated function to set medications with internal flag
 	const updateMedications = (newMeds: Medication[]) => {
@@ -94,7 +92,14 @@ const MedicationInput = ({
 
 	// Reset form without hiding it by default
 	const resetForm = (hideForm = false) => {
-		setNewMedication({ name: "", dosage: "", occurrence: "" });
+		setNewMedication({
+			original: "",
+			corrected: "",
+			matched: false,
+			category: null,
+			dosage: "",
+			frequency: "",
+		});
 		if (hideForm) {
 			setShowAddForm(false);
 		}
@@ -102,11 +107,7 @@ const MedicationInput = ({
 	};
 
 	const addMedication = () => {
-		if (
-			!newMedication.name.trim() ||
-			!newMedication.dosage.trim() ||
-			!newMedication.occurrence.trim()
-		) {
+		if (!newMedication.corrected.trim()) {
 			Alert.alert(
 				"Missing Information",
 				"Please enter at least the medication name."
@@ -189,10 +190,11 @@ const MedicationInput = ({
 							className="flex-row justify-between items-center p-3 bg-gray-50 rounded-md mb-2"
 						>
 							<View className="flex-1">
-								<Text className="font-medium">{medication.name}</Text>
+								<Text className="font-medium">{medication.corrected}</Text>
 								<Text className="text-gray-600 text-sm">
 									{medication.dosage}
-									{medication.occurrence ? ` • ${medication.occurrence}` : ""}
+									{medication.frequency ? ` • ${medication.frequency}` : ""}
+									{medication.category ? ` • ${medication.category}` : ""}
 								</Text>
 							</View>
 							<View className="flex-row">
@@ -226,9 +228,9 @@ const MedicationInput = ({
 						<Input
 							id="med-name"
 							placeholder="e.g., Aspirin, Lipitor"
-							value={newMedication.name}
+							value={newMedication.corrected}
 							onChangeText={(text) =>
-								setNewMedication({ ...newMedication, name: text })
+								setNewMedication({ ...newMedication, corrected: text })
 							}
 							className="mt-1"
 						/>
@@ -252,9 +254,22 @@ const MedicationInput = ({
 						<Input
 							id="med-occurrence"
 							placeholder="e.g., Once daily, Twice a day"
-							value={newMedication.occurrence}
+							value={newMedication.frequency}
 							onChangeText={(text) =>
-								setNewMedication({ ...newMedication, occurrence: text })
+								setNewMedication({ ...newMedication, frequency: text })
+							}
+							className="mt-1"
+						/>
+					</View>
+
+					<View className="mb-4">
+						<Label htmlFor="med-category">Category (optional)</Label>
+						<Input
+							id="med-category"
+							placeholder="e.g., Antibiotic, Diuretic"
+							value={newMedication.category || ""}
+							onChangeText={(text) =>
+								setNewMedication({ ...newMedication, category: text || null })
 							}
 							className="mt-1"
 						/>

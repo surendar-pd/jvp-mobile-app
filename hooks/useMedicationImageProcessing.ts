@@ -4,14 +4,17 @@ import { useMutation } from "@tanstack/react-query";
 import { Alert } from "react-native";
 import mime from "mime";
 
-type Medication = {
-	name: string;
+export type Medication = {
+	original: string;
+	corrected: string;
+	matched: boolean;
+	category: string | null;
 	dosage: string;
-	occurrence: string;
+	frequency: string;
 };
 
 interface ProcessImageResponse {
-	medications: Medication[];
+	correctedMedications: Medication[];
 }
 
 // Function to process the image with the API
