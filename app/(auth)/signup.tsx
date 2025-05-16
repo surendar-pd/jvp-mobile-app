@@ -97,10 +97,10 @@ export default function Signup() {
 					/>
 					<View className="gap-y-4 flex-1">
 						<View>
-							<Label htmlFor="username">{t("signup.username")}</Label>
+							<Label htmlFor="name">{t("signup.username")}</Label>
 							<FormField
 								control={control}
-								name="username"
+								name="name"
 								placeholder={t("signup.username")}
 								autoCapitalize="words"
 								errors={errors}
@@ -159,6 +159,7 @@ export default function Signup() {
 						variant="default"
 						onPress={handleSubmit(onSubmit)}
 						disabled={isPending}
+						loading={isPending}
 					>
 						<Text>{t("button.signup")}</Text>
 					</Button>
