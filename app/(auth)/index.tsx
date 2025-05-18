@@ -130,9 +130,9 @@ export default function Login() {
 						<Button
 							size="lg"
 							variant="default"
-							// onPress={handleSubmit(onSubmit)}
-							onPress={() => router.push("/(onboarding)")}
+							onPress={handleSubmit(onSubmit)}
 							disabled={isPending}
+							loading={isPending}
 						>
 							<Text>{t("button.login")}</Text>
 						</Button>

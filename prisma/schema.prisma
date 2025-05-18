@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client-js"
   output   = "../lib/generated/prisma"
@@ -558,10 +559,99 @@ model directus_webhooks {
 }
 
 model users {
+  id                 String               @id @db.Char(36)
+  date_created       DateTime?            @db.Timestamp(0)
+  date_updated       DateTime?            @db.Timestamp(0)
+  name               String               @db.VarChar(255)
+  email              String               @unique(map: "users_email_unique") @db.VarChar(255)
+  password           String               @db.VarChar(255)
+  medication_history medication_history[]
+  patient_vitals     patient_vitals[]
+}
+
+model medication_history {
+  id              String    @id @db.Char(36)
+  date_created    DateTime? @db.Timestamp(0)
+  date_updated    DateTime? @db.Timestamp(0)
+  medication_name String?   @db.Text
+  frequency       String?   @db.Text
+  recorded_at     DateTime? @db.Date
+  dosage          Int?
+  patient_id      String?   @db.Char(36)
+  users           users?    @relation(fields: [patient_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "medication_history_patient_id_foreign")
+
+  @@index([patient_id], map: "medication_history_patient_id_foreign")
+}
+
+model patient_vitals {
   id           String    @id @db.Char(36)
   date_created DateTime? @db.Timestamp(0)
   date_updated DateTime? @db.Timestamp(0)
-  name         String    @db.VarChar(255)
-  email        String    @db.VarChar(255)
-  password     String    @db.VarChar(255)
+  height_cm    Decimal?  @db.Decimal(5, 2)
+  weight_kg    Decimal?  @db.Decimal(5, 2)
+  recorded_at  DateTime? @db.Date
+  patient_id   String?   @db.Char(36)
+  users        users?    @relation(fields: [patient_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "patient_vitals_patient_id_foreign")
+
+  @@index([patient_id], map: "patient_vitals_patient_id_foreign")
+}
+
+model User {
+  id            String    @id
+  name          String    @db.Text
+  email         String
+  emailVerified Boolean
+  image         String?   @db.Text
+  createdAt     DateTime
+  updatedAt     DateTime
+  sessions      Session[]
+  accounts      Account[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?  @db.Text
+  userAgent String?  @db.Text
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String    @db.Text
+  providerId            String    @db.Text
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?   @db.Text
+  refreshToken          String?   @db.Text
+  idToken               String?   @db.Text
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?   @db.Text
+  password              String?   @db.Text
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String    @db.Text
+  value      String    @db.Text
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
 }

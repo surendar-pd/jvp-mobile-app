@@ -1,5 +1,7 @@
 /* eslint-disable no-undef */
-module.exports = function (/** @type {{ cache: (arg0: boolean) => void; }} */ api) {
+module.exports = function (
+	/** @type {{ cache: (arg0: boolean) => void; }} */ api
+) {
 	api.cache(true);
 	return {
 		presets: [
@@ -8,6 +10,21 @@ module.exports = function (/** @type {{ cache: (arg0: boolean) => void; }} */ ap
 				{ jsxImportSource: "nativewind", unstable_transformImportMeta: true },
 			],
 			"nativewind/babel",
+		],
+		plugins: [
+			[
+				"module-resolver",
+				{
+					alias: {
+						"better-auth/react":
+							"./node_modules/better-auth/dist/client/react/index.cjs",
+						"better-auth/client/plugins":
+							"./node_modules/better-auth/dist/client/plugins/index.cjs",
+						"@better-auth/expo/client":
+							"./node_modules/@better-auth/expo/dist/client.cjs",
+					},
+				},
+			],
 		],
 	};
 };

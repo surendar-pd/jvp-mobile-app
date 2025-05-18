@@ -754,6 +754,7 @@ const OnboardingScreen = () => {
 							onPress={handlePrevious}
 							disabled={currentStep === 0}
 							iconLeft={ArrowLeft}
+							iconColor="black"
 						>
 							<Text>Back</Text>
 						</Button>
