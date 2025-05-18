@@ -43,17 +43,6 @@ const login = async (data: LoginFormData) => {
 	}
 };
 
-export const useLogout = () => {
-	const { setLoggedIn } = useAuthStore();
-
-	const logout = async () => {
-		setLoggedIn(false);
-	};
-	return {
-		logout,
-	};
-};
-
 export const useLogin = () => {
 	const { setLoggedIn } = useAuthStore();
 
@@ -85,7 +74,7 @@ export const useSignup = () => {
 	});
 };
 
-export const useLogOut = () => {
+export const useLogout = () => {
 	const { setLoggedIn } = useAuthStore();
 
 	return useMutation({

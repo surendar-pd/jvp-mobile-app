@@ -9,7 +9,7 @@ import { Text } from "@/components/ui/text";
 import { useLogout } from "@/hooks/useAuth";
 
 const Profile = () => {
-	const { logout } = useLogout();
+	const { isPending, mutate } = useLogout();
 
 	return (
 		<ThemedView>
@@ -18,7 +18,14 @@ const Profile = () => {
 					<Label>Name</Label>
 					<Input />
 				</View>
-				<Button onPress={logout} variant="destructive">
+				<Button
+					disabled={isPending}
+					loading={isPending}
+					onPress={() => {
+						mutate();
+					}}
+					variant="destructive"
+				>
 					<Text>Logout</Text>
 				</Button>
 			</ScrollView>
