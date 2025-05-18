@@ -64,9 +64,12 @@ export const useSignup = () => {
 		mutationFn: signup,
 		onSuccess: (result) => {
 			const { data } = result;
-
-			// Handle successful signup (e.g., redirect to login)
-			router.replace("/(onboarding)");
+			router.push({
+				pathname: "/(auth)/verify-email",
+				params: {
+					email: data.user.email,
+				},
+			});
 		},
 		onError: (error) => {
 			toast.error(`${error instanceof Error ? error.message : String(error)}`);

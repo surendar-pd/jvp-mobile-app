@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 
 import { useAuthStore } from "@/store";
 
-
 export default function AuthLayout() {
 	const { t } = useTranslation();
 	const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -29,6 +28,12 @@ export default function AuthLayout() {
 				name="signup"
 				options={{
 					title: t("signup"),
+				}}
+			/>
+			<Stack.Screen
+				name="verify-email"
+				options={{
+					title: t("verification"),
 				}}
 			/>
 		</Stack>

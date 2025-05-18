@@ -29,8 +29,13 @@
 		"dontHaveAccount": "Vous n'avez pas de compte?",
 		"signupLink": "S'inscrire"
 	},
+	"verification": {
+		"title": "Vérification de l'E-mail",
+		"verificationSent": "E-mail de vérification envoyé. Veuillez vérifier votre boîte de réception."
+	},
 	"button": {
 		"getStarted": "Commencer",
+		"continue": "Continuer",
 		"signup": "S'inscrire",
 		"login": "Connexion",
 		"submit": "Soumettre",
@@ -39,5 +44,6 @@
 		"edit": "Modifier",
 		"save": "Enregistrer",
 		"update": "Mettre à jour"
-	}
+	},
+	"verify-email": "Verify Email french"
 }

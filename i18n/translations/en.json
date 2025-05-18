@@ -29,8 +29,13 @@
 		"dontHaveAccount": "Don't have an account?",
 		"signupLink": "Sign Up"
 	},
+	"verification": {
+		"title": "Email Verification",
+		"verificationSent": "Verification email sent. Please check your inbox."
+	},
 	"button": {
 		"getStarted": "Get Started",
+		"continue": "Continue",
 		"signup": "Sign Up",
 		"login": "Login",
 		"submit": "Submit",

@@ -1,6 +1,5 @@
-import { betterAuth } from "better-auth";
-import { expo } from "@better-auth/expo";
+// This file is now deprecated in favor of /lib/auth.ts to centralize auth configuration
+// Importing from lib/auth.ts to maintain consistency
+import { auth } from "@/lib/auth";
 
-export const auth = betterAuth({
-	plugins: [expo()],
-});
+export { auth };
