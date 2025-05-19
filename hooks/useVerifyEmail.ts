@@ -9,7 +9,7 @@ export async function sendVerificationEmail({
 	const baseUrl =
 		process.env.BETTER_AUTH_URL ||
 		process.env.EXPO_PUBLIC_API_URL ||
-		"http://localhost:8081";
+		"https://xlwj9d64-8081.use.devtunnels.ms";
 	const apiEndpoint = `${baseUrl}/api/sendverifyemail`;
 
 	const res = await fetch(apiEndpoint, {

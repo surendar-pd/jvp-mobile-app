@@ -68,14 +68,7 @@ export default function TabLayout() {
 			<Tabs.Screen
 				name="profile"
 				options={{
-					title: "Profile",
-					headerShown: true,
-					headerTitle: "My Profile",
-
-					headerBackButtonDisplayMode: "minimal",
-					headerTitleStyle: {
-						fontFamily: "Poppins",
-					},
+					headerShown: false,
 					tabBarIcon: ({ color, focused }) => (
 						<IconSymbol
 							size={24}

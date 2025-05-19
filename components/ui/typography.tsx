@@ -190,10 +190,7 @@ const Small = React.forwardRef<TextRef, SlottableTextProps>(
 		return (
 			<Component
 				style={{ fontFamily: "Poppins" }}
-				className={cn(
-					"text-sm text-foreground font-medium leading-none web:select-text",
-					className
-				)}
+				className={cn("text-sm text-foreground font-medium", className)}
 				ref={ref}
 				{...props}
 			/>
@@ -209,10 +206,7 @@ const Muted = React.forwardRef<TextRef, SlottableTextProps>(
 		return (
 			<Component
 				style={{ fontFamily: "Poppins" }}
-				className={cn(
-					"text-sm text-muted-foreground web:select-text",
-					className
-				)}
+				className={cn("text-sm text-muted-foreground", className)}
 				ref={ref}
 				{...props}
 			/>

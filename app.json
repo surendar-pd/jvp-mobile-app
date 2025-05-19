@@ -40,7 +40,7 @@
 			[
 				"expo-router",
 				{
-					"origin": "http://localhost:8081"
+					"origin": "https://xlwj9d64-8081.use.devtunnels.ms"
 				}
 			],
 			[
@@ -73,7 +73,7 @@
 		},
 		"extra": {
 			"router": {
-				"origin": "http://localhost:8081"
+				"origin": "https://xlwj9d64-8081.use.devtunnels.ms"
 			},
 			"eas": {
 				"projectId": "6ab4dbd2-ed3c-4a82-999f-68669ebe1222"
