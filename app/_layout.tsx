@@ -21,9 +21,6 @@ import { View, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner-native";
 import { SheetProvider } from "react-native-actions-sheet";
-import { createAuthClient } from "better-auth/react";
-import { expoClient } from "@better-auth/expo/client";
-import * as SecureStore from "expo-secure-store";
 import { useColorScheme } from "@/lib/useColorScheme";
 import { useAuthStore } from "@/store";
 import LanguageToggle from "@/components/language-toggle";
@@ -63,19 +60,7 @@ const fontConfig = {
 	PoppinsThin: require("../assets/fonts/Poppins-Thin.ttf"),
 };
 
-export const authClient = createAuthClient({
-	baseURL: "http://localhost:8081" /* Base URL of your Better Auth backend. */,
-	plugins: [
-		expoClient({
-			scheme: "myapp",
-			storagePrefix: "myapp",
-			storage: SecureStore,
-		}),
-	],
-});
-
 export default function RootLayout() {
-	
 	const { isLoggedIn } = useAuthStore();
 	const { isDarkColorScheme } = useColorScheme();
 	const [loaded, error] = useFonts(fontConfig);

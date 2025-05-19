@@ -4,7 +4,7 @@ import { router } from "expo-router";
 import { toast } from "sonner-native";
 import { LoginFormData, SignupFormData } from "@/schemas/auth";
 import { useAuthStore } from "@/store";
-import { authClient } from "@/app/_layout";
+import { authClient } from "@/lib/auth-client";
 
 const signup = async (data: SignupFormData) => {
 	try {

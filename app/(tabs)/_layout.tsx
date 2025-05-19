@@ -70,7 +70,7 @@ export default function TabLayout() {
 				options={{
 					title: "Profile",
 					headerShown: true,
-					headerTitle: "Profile",
+					headerTitle: "My Profile",
 
 					headerBackButtonDisplayMode: "minimal",
 					headerTitleStyle: {

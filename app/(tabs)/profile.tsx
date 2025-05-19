@@ -1,12 +1,10 @@
 import React from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { View } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { useLogout } from "@/hooks/useAuth";
+import ProfileCard from "@/components/profile/profile-card";
 
 const Profile = () => {
 	const { isPending, mutate } = useLogout();
@@ -14,10 +12,7 @@ const Profile = () => {
 	return (
 		<ThemedView>
 			<ScrollView className="p-4">
-				<View>
-					<Label>Name</Label>
-					<Input />
-				</View>
+				<ProfileCard />
 				<Button
 					disabled={isPending}
 					loading={isPending}
