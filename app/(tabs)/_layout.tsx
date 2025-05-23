@@ -7,14 +7,14 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { useAuthStore } from "@/store";
+import { useSession } from "@/hooks/useSession";
 
 export default function TabLayout() {
 	const colorScheme = useColorScheme();
-	const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+	const { isAuthenticated } = useSession();
 
 	// If user is not logged in, redirect to login
-	if (!isLoggedIn) {
+	if (!isAuthenticated) {
 		return <Redirect href="/(auth)" />;
 	}
 

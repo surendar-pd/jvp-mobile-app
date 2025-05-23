@@ -1,19 +1,20 @@
+import { ActivityIndicator, View } from "react-native";
 import { Redirect } from "expo-router";
 // import { View, ActivityIndicator } from "react-native";
-import { useAuthStore } from "@/store";
+import { useSession } from "@/hooks/useSession";
 
 export default function Index() {
-	const { isLoggedIn } = useAuthStore();
-	// if (isLoading) {
-	// 	return (
-	// 		<View className="flex-1 items-center justify-center">
-	// 			<ActivityIndicator size="small" />
-	// 		</View>
-	// 	);
-	// }
+	const { isAuthenticated, isLoading } = useSession();
+	if (isLoading) {
+		return (
+			<View className="flex-1 items-center justify-center">
+				<ActivityIndicator size="small" />
+			</View>
+		);
+	}
 
 	// If authenticated, redirect to home screen
-	if (isLoggedIn) {
+	if (isAuthenticated) {
 		return <Redirect href="/(tabs)" />;
 	}
 

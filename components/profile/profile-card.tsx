@@ -1,41 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Image, View } from "react-native";
 import { Link } from "expo-router";
-import { authClient } from "@/lib/auth-client";
+import { useSession } from "@/hooks/useSession";
 import { H2, Small } from "../ui/typography";
 import { Button } from "../ui/button";
 import { Text } from "../ui/text";
 
-// Define type for session data
-type SessionData = {
-	user?: {
-		id: string;
-		name?: string;
-		email?: string;
-		emailVerified?: boolean;
-		image?: string | null;
-	};
-} | null;
-
 const ProfileCard = () => {
-	const [session, setSession] = useState<SessionData>(null);
-
-	const fetchSession = async () => {
-		const { data: sessionData, error } = await authClient.getSession();
-		if (error) {
-			console.error("Error fetching session:", error);
-			return null;
-		}
-		return sessionData;
-	};
-
-	useEffect(() => {
-		const fetchData = async () => {
-			const sessionData = await fetchSession();
-			setSession(sessionData);
-		};
-		fetchData();
-	}, []);
+	const { session } = useSession();
 
 	return (
 		<View className="flex-row items-center gap-4 mt-4 mb-8">

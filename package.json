@@ -60,7 +60,7 @@
     "expo-haptics": "~14.1.4",
     "expo-image-picker": "~16.1.4",
     "expo-linear-gradient": "~14.1.4",
-    "expo-linking": "^7.1.5",
+    "expo-linking": "~7.1.5",
     "expo-network": "~7.1.5",
     "expo-router": "~5.0.6",
     "expo-secure-store": "~14.2.3",
@@ -101,6 +101,7 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@eslint/js": "^9.26.0",
+    "@react-native-community/cli": "^18.0.0",
     "@tailwindcss/typography": "^0.5.16",
     "@types/jest": "^29.5.12",
     "@types/react": "~19.0.10",

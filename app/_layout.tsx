@@ -22,7 +22,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Toaster } from "sonner-native";
 import { SheetProvider } from "react-native-actions-sheet";
 import { useColorScheme } from "@/lib/useColorScheme";
-import { useAuthStore } from "@/store";
+import { useSession } from "@/hooks/useSession";
 import LanguageToggle from "@/components/language-toggle";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -61,7 +61,7 @@ const fontConfig = {
 };
 
 export default function RootLayout() {
-	const { isLoggedIn } = useAuthStore();
+	const { isAuthenticated } = useSession();
 	const { isDarkColorScheme } = useColorScheme();
 	const [loaded, error] = useFonts(fontConfig);
 
@@ -104,15 +104,17 @@ export default function RootLayout() {
 					<GestureHandlerRootView className="flex-1">
 						<SheetProvider>
 							<Stack
-								initialRouteName={isLoggedIn ? "(tabs)" : "welcome-consent"}
+								initialRouteName={
+									isAuthenticated ? "(tabs)" : "welcome-consent"
+								}
 								screenOptions={{
 									headerShown: false,
 								}}
 							>
-								<Stack.Protected guard={isLoggedIn}>
+								<Stack.Protected guard={isAuthenticated}>
 									<Stack.Screen name="(tabs)" />
 								</Stack.Protected>
-								<Stack.Protected guard={!isLoggedIn}>
+								<Stack.Protected guard={!isAuthenticated}>
 									<Stack.Screen
 										options={{
 											headerShown: true,

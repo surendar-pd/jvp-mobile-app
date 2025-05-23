@@ -1,14 +1,14 @@
 import { Redirect, Stack } from "expo-router";
 import { useTranslation } from "react-i18next";
 
-import { useAuthStore } from "@/store";
+import { useSession } from "@/hooks/useSession";
 
 export default function AuthLayout() {
 	const { t } = useTranslation();
-	const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+	const { isAuthenticated } = useSession();
 
 	// If user is logged in, redirect to tabs
-	if (isLoggedIn) {
+	if (isAuthenticated) {
 		return <Redirect href="/(tabs)" />;
 	}
 

@@ -13,15 +13,10 @@ export const auth = betterAuth({
 	},
 	emailVerification: {
 		sendOnSignUp: true,
+		autoSignInAfterVerification: true,
 		sendVerificationEmail: async ({ user, url }, _request) => {
-			// Get the base URL for the API request
-			const baseUrl =
-				process.env.BETTER_AUTH_URL ||
-				process.env.EXPO_PUBLIC_API_URL ||
-				"https://xlwj9d64-8081.use.devtunnels.ms";
-			const apiEndpoint = `${baseUrl}/api/sendverifyemail`;
-
-			const res = await fetch(apiEndpoint, {
+			const baseUrl = process.env.EXPO_PUBLIC_API_URL!;
+			const res = await fetch(`${baseUrl}/api/sendverifyemail`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -42,5 +37,5 @@ export const auth = betterAuth({
 			}
 		},
 	},
-	trustedOrigins: ["myapp://"],
+	trustedOrigins: ["myapp://", "https://xlwj9d64-8081.use.devtunnels.ms"],
 });
